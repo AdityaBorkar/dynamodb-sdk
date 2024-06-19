@@ -1,11 +1,47 @@
 {
-  "name": "ddb-js",
-  "module": "index.ts",
+  "name": "dynamodb-sdk",
+  "version": "0.0.2",
+  "description": "A simple and readable DynamoDB wrapper to streamline and simplify interactions with Amazon DynamoDB.",
+  "private": false,
+  "keywords": [
+    "sst",
+    "db wrapper",
+    "db client",
+    "dynamodb",
+    "aws",
+    "amazon",
+    "database",
+    "wrapper",
+    "nosql",
+    "javascript",
+    "nodejs"
+  ],
+  "homepage": "https://adityaborkar.com/dynamodb-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdityaBorkar/dynamodb-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AdityaBorkar/dynamodb-sdk/issues",
+    "email": "aditya.borkar.programs+npm@gmail.com"
+  },
+  "author": {
+    "name": "Aditya Borkar",
+    "url": "https://adityaborkar.com",
+    "email": "aditya.borkar.programs+npm@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "module": "lib/index.ts",
   "type": "module",
   "devDependencies": {
+    "biome": "^0.3.3",
     "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.14.0"
   }
 }

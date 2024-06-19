@@ -1,19 +1,26 @@
-Logo (ddb-js)
+<div align="center">
 
-NPM Version | Downloads | Stars | Coverage | Discord | License
+<h1>dynamodb-sdk</h1>
+
+NPM Version   |   Downloads   |   Stars   |   Coverage   |   License
+
+Quickstart   •   Website   •   Docs   •   Examples   •   GitHub   •   Discord 
 
 <sub><em>
-ddb-js is an open-source community project and NOT affiliated with AWS or Amazon.
+`dynamodb-sdk` is an open-source community project and NOT affiliated with AWS or Amazon.
 </em></sub>
 
----
+<br/>
+<br/>
+</div>
+
 
 ## Features
 
-- Supports SST 3.0+
-- Readable and composable code
+- [Emoji] Supports SST 3.0+
+- [Emoji] Readable and composable code
 
-## Documentation
+## Getting Started
 
 Read more and compile from
 - https://github.com/alexdebrie/awesome-dynamodb
@@ -22,7 +29,7 @@ Read more and compile from
 - CONTRIBUTING.md
 - BRANCHES.md -> stable, v1-wip, v2-rc, v2-beta, v2-wip
 
-Visit https://adityaborkar.com/ddb-js/docs to view the full documentation.
+Visit https://adityaborkar.com/dynamodb-sdk/docs to view the full documentation.
 
 ## Community
 
@@ -32,11 +39,11 @@ Do note that our Code of Conduct applies to all community channels. Users are hi
 
 ## Contributing
 
-Contributions to `ddb-js` are welcome and highly appreciated. However, before you jump right into it, we would like you to review our Contribution Guidelines to make sure you have a smooth experience contributing to `ddb-js`.
+Contributions to `dynamodb-sdk` are welcome and highly appreciated. However, before you jump right into it, we would like you to review our Contribution Guidelines to make sure you have a smooth experience contributing to `dynamodb-sdk`.
 
 ## Contributors
 
-<!-- We would like to thank all the contributors who helped make `ddb-js` better -->
+<!-- We would like to thank all the contributors who helped make `dynamodb-sdk` better -->
 
 - Aditya Borkar (TWITTER)
 
