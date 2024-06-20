@@ -1,6 +1,6 @@
 {
   "name": "dynamodb-sdk",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A simple and readable DynamoDB wrapper to streamline and simplify interactions with Amazon DynamoDB.",
   "private": false,
   "keywords": [
