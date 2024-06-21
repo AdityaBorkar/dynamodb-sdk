@@ -4,17 +4,20 @@
   "description": "A simple and readable DynamoDB wrapper to streamline and simplify interactions with Amazon DynamoDB.",
   "private": false,
   "keywords": [
-    "sst",
-    "db wrapper",
-    "db client",
-    "dynamodb",
     "aws",
-    "amazon",
-    "database",
+    "dynamodb",
+    "db",
+    "orm",
     "wrapper",
+    "document",
+    "model",
+    "schema",
+    "database",
     "nosql",
-    "javascript",
-    "nodejs"
+    "sst",
+    "zod",
+    "superstruct",
+    "datastore"
   ],
   "homepage": "https://adityaborkar.com/dynamodb-sdk",
   "repository": {

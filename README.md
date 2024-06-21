@@ -13,9 +13,14 @@
 
 <h1>dynamodb-sdk</h1>
 
-NPM Version   |   Downloads   |   Stars   |   Coverage   |   License(from shields.io)
 
-Quickstart   •   Website   •   Docs   •   Examples   •   GitHub   •   Discord 
+![NPM Version](https://img.shields.io/npm/v/dynamodb-sdk) &emsp;&emsp; ![NPM Downloads](https://img.shields.io/npm/dm/dynamodb-sdk) &emsp;&emsp; ![Stars](https://github.com/adityaborkar/dynamodb-sdk/stargazers) &emsp;&emsp; ![Visits](https://badges.pufler.dev/visits/adityaborkar/dynamodb-sdk) &emsp;&emsp; ![NPM License](https://img.shields.io/badge/License-MIT-blue)
+
+<!-- TODO: REMOVE VISITS ONCE STABLE VERSION IS RELEASED -->
+<!-- TODO: ADD TEST COVERAGE AND BUILD STATUS -->
+<!-- TODO: Add links to images -->
+
+[Website](https://adityaborkar.com/dynamodb-sdk) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Docs](https://adityaborkar.com/dynamodb-sdk/docs) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Examples](https://adityaborkar.com/dynamodb-sdk/guides) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [GitHub](https://github.com/adityaborkar/dynamodb-sdk) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Discord](https://github.com/adityaborkar/dynamodb-sdk)
 
 <sub><em>
 dynamodb-sdk is an open-source community project and NOT affiliated with AWS or Amazon.
