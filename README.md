@@ -14,13 +14,12 @@
 <h1>dynamodb-sdk</h1>
 
 
-![NPM Version](https://img.shields.io/npm/v/dynamodb-sdk) &emsp;&emsp; ![NPM Downloads](https://img.shields.io/npm/dm/dynamodb-sdk) &emsp;&emsp; ![Stars](https://github.com/adityaborkar/dynamodb-sdk/stargazers) &emsp;&emsp; ![Visits](https://badges.pufler.dev/visits/adityaborkar/dynamodb-sdk) &emsp;&emsp; ![NPM License](https://img.shields.io/badge/License-MIT-blue)
+[![JSR](https://jsr.io/badges/@dynamodb/sdk)](https://jsr.io/@dynamodb/sdk) [![NPM Version](https://img.shields.io/npm/v/dynamodb-sdk)](https://npmjs.com/package/dynamodb-sdk) [![NPM Total Downloads](https://img.shields.io/npm/d18m/dynamodb-sdk)]((https://npmjs.com/package/dynamodb-sdk)) ![Minified GZipped Bundle Size](https://badgen.net/bundlephobia/minzip/dynamodb-sdk) Builds Coverage
 
-<!-- TODO: REMOVE VISITS ONCE STABLE VERSION IS RELEASED -->
-<!-- TODO: ADD TEST COVERAGE AND BUILD STATUS -->
-<!-- TODO: Add links to images -->
+![Discord](https://img.shields.io/discord/server-id)
+&emsp;&emsp;[![GitHub Repo stars](https://img.shields.io/github/stars/adityaborkar/dynamodb-sdk)](https://github.com/adityaborkar/dynamodb-sdk)
 
-[Website](https://adityaborkar.com/dynamodb-sdk) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Docs](https://adityaborkar.com/dynamodb-sdk/docs) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Examples](https://adityaborkar.com/dynamodb-sdk/guides) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [GitHub](https://github.com/adityaborkar/dynamodb-sdk) &emsp;&emsp;&emsp; • &emsp;&emsp;&emsp; [Discord](https://github.com/adityaborkar/dynamodb-sdk)
+[Website](https://adityaborkar.com/dynamodb-sdk)&emsp;•&emsp;[Docs](https://adityaborkar.com/dynamodb-sdk/docs)&emsp;•&emsp;[Examples](https://adityaborkar.com/dynamodb-sdk/guides)&emsp;•&emsp;[Guides](https://adityaborkar.com/dynamodb-sdk/guides)&emsp;•&emsp;[Playground](https://adityaborkar.com/dynamodb-sdk/playround)
 
 <sub><em>
 dynamodb-sdk is an open-source community project and NOT affiliated with AWS or Amazon.
@@ -66,11 +65,13 @@ Do note that our Code of Conduct applies to all community channels. Users are hi
 
 Contributions to `dynamodb-sdk` are welcome and highly appreciated. However, before you jump right into it, we would like you to review our Contribution Guidelines to make sure you have a smooth experience contributing to `dynamodb-sdk`.
 
-<!-- <br/>
+<!--
+<br/>
 
 ## Contributors
 
 We would like to thank all the contributors who helped make `dynamodb-sdk` better
 
-- Aditya Borkar (TWITTER) -->
+- Aditya Borkar (TWITTER)
+-->
 

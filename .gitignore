@@ -1,6 +1,11 @@
-README-DRAFT.md
-
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
+
+# Personal Files
+README-DRAFT.md
+.DRAFTS
+
+# Arktype
+.attest
 
 # Logs
 

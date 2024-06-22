@@ -1,0 +1,11 @@
+{
+    "name": "@dynamodb/sdk",
+    "version": "0.0.5",
+    "description": "A simple and readable DynamoDB wrapper to streamline and simplify interactions with Amazon DynamoDB.",
+    "exports": "./lib/index.ts",
+    "publish": {
+        "exclude": [
+            "tests"
+        ]
+    }
+}

@@ -1,2 +1,0 @@
-// ExecuteStatementCommand
-// ExecuteTransactionCommand
