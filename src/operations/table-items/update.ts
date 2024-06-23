@@ -3,7 +3,6 @@ import type {
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
 import type { FlagType } from '../../utils/OperationFactory'
-import type SchemaPrototype from '../../utils/SchemaPrototype'
 import type { AnyObject, ExcludeNullableProps, _DbFieldType } from '../types'
 
 import CompileConditionExpression from '../../expressions/ConditionExpression'
@@ -13,11 +12,11 @@ import OperationFactory from '../../utils/OperationFactory'
 type CommandInput = UpdateCommandInput
 
 export default class UpdateOperation<
-  ST extends SchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
   OT extends string,
-> extends OperationFactory<ST, FT, CIT> {
+> extends OperationFactory<TS, FT, CIT> {
   #CLONE_INSTANCE<
     OmitMethodName extends string,
     PartialCommand extends Partial<CommandInput>,
@@ -29,7 +28,7 @@ export default class UpdateOperation<
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
     return new UpdateOperation(props) as Omit<
-      UpdateOperation<ST, FT, CT, _OT>,
+      UpdateOperation<TS, FT, CT, _OT>,
       _OT
     >
   }
@@ -41,7 +40,7 @@ export default class UpdateOperation<
    * You can also use SET to add or subtract from an attribute that is of type Number. Example: SET myNum = myNum + :val
    */
   data(
-    c: SchemaPrototype<ST>['fields'],
+    c: TS['_typings']['attributes'],
     command: {
       [attribute: string]:
         | { $action: 'APPEND_LIST'; $value: (string | number | boolean)[] } // TODO: extends [] ?
@@ -180,9 +179,8 @@ export default class UpdateOperation<
       .update(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        if (!this.flags.verbose) return
-        console.log('Update Operation Request: ', this.command)
-        console.log('Update Operation Response: ', response)
+        this.logger('Update Operation Request: ', this.command)
+        this.logger('Update Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -198,8 +196,8 @@ export default class UpdateOperation<
     } as {
       data: CIT['ReturnValues'] extends 'ALL_OLD'
         ? ValidateValue extends true
-          ? SchemaPrototype<ST>['item']
-          : SchemaPrototype<ST>['item'] & AnyObject
+          ? TS['_typings']['item']
+          : TS['_typings']['item'] & AnyObject
         : null
       metadata: {
         request: UpdateCommandOutput['$metadata']

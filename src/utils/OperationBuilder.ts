@@ -8,7 +8,7 @@ import type SchemaPrototype from './SchemaPrototype'
  * TODO: Add all functions used to create a method and then just call the method and construct objects.
  */
 export default class OperationBuilder<
-  ST extends SchemaType,
+  ST extends TableSchemaType,
   FT extends FlagType,
   CT,
 > {

@@ -10,7 +10,7 @@ export default class QueryOperation extends MethodBuilder<QueryCommandInput> {
     ddb: DynamoDBDocument
     tableName: string
     verbose: boolean
-    schema: SchemaType
+    schema: TableSchemaType
     indexName?: string
     condition: string
   }) {

@@ -1,5 +1,5 @@
 import { DynamoDbClient } from '@/index'
-import { dbSchema } from './database'
+import { dbSchema } from './example'
 import { describe, it } from 'vitest'
 import { attest } from '@arktype/attest'
 import { type } from 'arktype'

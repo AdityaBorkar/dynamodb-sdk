@@ -1,8 +1,6 @@
 import type { GetCommandInput, GetCommandOutput } from '@aws-sdk/lib-dynamodb'
 import type { ExtractSchemaAttributes } from '../../expressions/ProjectionExpression'
 import type { FlagType } from '../../utils/OperationFactory'
-import type Schema from '../../utils/SchemaPrototype'
-import type SchemaPrototype from '../../utils/SchemaPrototype'
 import type { AnyObject, ExcludeNullableProps } from '../types'
 
 import CompileProjectionExpression from '../../expressions/ProjectionExpression'
@@ -12,11 +10,11 @@ import OperationFactory from '../../utils/OperationFactory'
 type CommandInput = GetCommandInput
 
 export default class GetOperation<
-  ST extends SchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
   OT extends string,
-> extends OperationFactory<ST, FT, CIT> {
+> extends OperationFactory<TS, FT, CIT> {
   #CLONE_INSTANCE<
     OmitMethodName extends string,
     PartialCommand extends Partial<CommandInput>,
@@ -27,7 +25,7 @@ export default class GetOperation<
     type CT = typeof command
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
-    return new GetOperation(props) as Omit<GetOperation<ST, FT, CT, _OT>, _OT>
+    return new GetOperation(props) as Omit<GetOperation<TS, FT, CT, _OT>, _OT>
   }
 
   /**
@@ -38,8 +36,8 @@ export default class GetOperation<
    */
   values(
     attributes: [
-      ExtractSchemaAttributes<SchemaPrototype<ST>['fields']>,
-      ...ExtractSchemaAttributes<SchemaPrototype<ST>['fields']>[],
+      ExtractSchemaAttributes<TS['_typings']['attributes']>,
+      ...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
     ],
   ) {
     const params = CompileProjectionExpression(
@@ -99,9 +97,8 @@ export default class GetOperation<
       .get(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        if (!this.flags.verbose) return
-        console.log('Get Operation Request: ', this.command)
-        console.log('Get Operation Response: ', response)
+        this.logger('Get Operation Request: ', this.command)
+        this.logger('Get Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -115,8 +112,8 @@ export default class GetOperation<
       },
     } as {
       data: ValidateValue extends true
-        ? Schema<ST>['item']
-        : Schema<ST>['item'] & AnyObject
+        ? TS['_typings']['item']
+        : TS['_typings']['item'] & AnyObject
       metadata: {
         request: GetCommandOutput['$metadata']
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends

@@ -3,7 +3,6 @@ import type {
   DeleteCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
 import type { FlagType } from '../../utils/OperationFactory'
-import type Schema from '../../utils/SchemaPrototype'
 import type { AnyObject, ExcludeNullableProps } from '../types'
 
 import CompileConditionExpression from '../../expressions/ConditionExpression'
@@ -13,11 +12,11 @@ import OperationFactory from '../../utils/OperationFactory'
 type CommandInput = DeleteCommandInput
 
 export default class DeleteOperation<
-  ST extends SchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
   OT extends string,
-> extends OperationFactory<ST, FT, CIT> {
+> extends OperationFactory<TS, FT, CIT> {
   #CLONE_INSTANCE<
     OmitMethodName extends string,
     PartialCommand extends Partial<CommandInput>,
@@ -29,7 +28,7 @@ export default class DeleteOperation<
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
     return new DeleteOperation(props) as Omit<
-      DeleteOperation<ST, FT, CT, _OT>,
+      DeleteOperation<TS, FT, CT, _OT>,
       _OT
     >
   }
@@ -119,9 +118,8 @@ export default class DeleteOperation<
       .delete(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        if (!this.flags.verbose) return
-        console.log('Delete Operation Request: ', this.command)
-        console.log('Delete Operation Response: ', response)
+        this.logger('Delete Operation Request: ', this.command)
+        this.logger('Delete Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -138,8 +136,8 @@ export default class DeleteOperation<
       },
     } as {
       data: ValidateValue extends true
-        ? Schema<ST>['item']
-        : Schema<ST>['item'] & AnyObject
+        ? TS['_typings']['item']
+        : TS['_typings']['item'] & AnyObject
       metadata: {
         request: DeleteCommandOutput['$metadata']
         metrics: CIT['ReturnItemCollectionMetrics'] extends 'SIZE'

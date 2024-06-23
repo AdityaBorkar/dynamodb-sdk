@@ -1,6 +1,5 @@
 import type { PutCommandInput, PutCommandOutput } from '@aws-sdk/lib-dynamodb'
 import type { FlagType } from '../../utils/OperationFactory'
-import type Schema from '../../utils/SchemaPrototype'
 import type { AnyObject, ExcludeNullableProps } from '../types'
 
 import CompileConditionExpression from '../../expressions/ConditionExpression'
@@ -10,11 +9,11 @@ import OperationFactory from '../../utils/OperationFactory'
 type CommandInput = PutCommandInput
 
 export default class PutOperation<
-  ST extends SchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
   OT extends string,
-> extends OperationFactory<ST, FT, CIT> {
+> extends OperationFactory<TS, FT, CIT> {
   #CLONE_INSTANCE<
     OmitMethodName extends string,
     PartialCommand extends Partial<CommandInput>,
@@ -25,7 +24,7 @@ export default class PutOperation<
     type CT = typeof command
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
-    return new PutOperation(props) as Omit<PutOperation<ST, FT, CT, _OT>, _OT>
+    return new PutOperation(props) as Omit<PutOperation<TS, FT, CT, _OT>, _OT>
   }
 
   /**
@@ -113,9 +112,8 @@ export default class PutOperation<
       .put(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        if (!this.flags.verbose) return
-        console.log('Put Operation Request: ', this.command)
-        console.log('Put Operation Response: ', response)
+        this.logger('Put Operation Request: ', this.command)
+        this.logger('Put Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -131,8 +129,8 @@ export default class PutOperation<
     } as {
       data: CIT['ReturnValues'] extends 'ALL_OLD'
         ? ValidateValue extends true
-          ? Schema<ST>['item']
-          : Schema<ST>['item'] & AnyObject
+          ? TS['_typings']['item']
+          : TS['_typings']['item'] & AnyObject
         : null
       metadata: {
         request: PutCommandOutput['$metadata']

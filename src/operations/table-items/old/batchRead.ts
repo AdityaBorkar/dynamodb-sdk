@@ -14,7 +14,7 @@ export default class BatchReadOperation extends MethodBuilder<BatchGetCommandInp
   constructor(props: {
     ddb: DynamoDBDocument
     verbose: boolean
-    schema: SchemaType
+    schema: TableSchemaType
     limitToOneTable: boolean
   }) {
     const { ddb, verbose, schema, limitToOneTable } = props

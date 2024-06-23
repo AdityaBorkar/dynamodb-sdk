@@ -4,8 +4,6 @@ import type {
 } from '@aws-sdk/lib-dynamodb'
 import type { ExtractSchemaAttributes } from '../../expressions/ProjectionExpression'
 import type { FlagType } from '../../utils/OperationFactory'
-import type Schema from '../../utils/SchemaPrototype'
-import type SchemaPrototype from '../../utils/SchemaPrototype'
 import type { AnyObject, ExcludeNullableProps } from '../types'
 
 import CompileProjectionExpression from '../../expressions/ProjectionExpression'
@@ -18,11 +16,11 @@ type CommandInput = QueryCommandInput
 // A single Query operation will read up to the maximum number of items set (if using the Limit parameter) or a maximum of 1 MB of data and then apply any filtering to the results using FilterExpression. If LastEvaluatedKey is present in the response, you will need to paginate the result set.
 
 export default class QueryOperation<
-  ST extends SchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
   OT extends string,
-> extends OperationFactory<ST, FT, CIT> {
+> extends OperationFactory<TS, FT, CIT> {
   #CLONE_INSTANCE<
     OmitMethodName extends string,
     PartialCommand extends Partial<CommandInput>,
@@ -34,7 +32,7 @@ export default class QueryOperation<
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
     return new QueryOperation(props) as Omit<
-      QueryOperation<ST, FT, CT, _OT>,
+      QueryOperation<TS, FT, CT, _OT>,
       _OT
     >
   }
@@ -61,8 +59,8 @@ export default class QueryOperation<
    */
   values(
     attributes: [
-      ExtractSchemaAttributes<SchemaPrototype<ST>['fields']>,
-      ...ExtractSchemaAttributes<SchemaPrototype<ST>['fields']>[],
+      ExtractSchemaAttributes<SchemaPrototype<TS>['fields']>,
+      ...ExtractSchemaAttributes<SchemaPrototype<TS>['fields']>[],
     ],
   ) {
     const params = CompileProjectionExpression(
@@ -119,12 +117,11 @@ export default class QueryOperation<
     this.flags.validate ??= validate ?? false
 
     const response = await this.ddb
-      .get(this.command)
+      .query(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        if (!this.flags.verbose) return
-        console.log('Get Operation Request: ', this.command)
-        console.log('Get Operation Response: ', response)
+        this.logger('Query Operation Request: ', this.command)
+        this.logger('Query Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -138,8 +135,8 @@ export default class QueryOperation<
       },
     } as {
       data: ValidateValue extends true
-        ? Schema<ST>['item']
-        : Schema<ST>['item'] & AnyObject
+        ? Schema<TS>['item']
+        : Schema<TS>['item'] & AnyObject
       metadata: {
         request: GetCommandOutput['$metadata']
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends

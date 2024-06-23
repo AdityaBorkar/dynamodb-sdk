@@ -1,25 +1,35 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-
-import SchemaPrototype from './utils/SchemaPrototype'
 import TableOperationsPrototype from './utils/TableOperationsPrototype'
 
-type DbSchemaType = Record<string, SchemaType>
-
-// TODO: Import Pre-build schemas from plugins
-// TODO: Multiple Schema for single table (with type narrowing)
 // TODO: Enable multi-zone and multi-account access
 // TODO: Manage multiple instances
-// TODO: Make this method a singleton
+
 // TODO: Support: ArkType, Zod, Superstruct
 // TODO: Measure Typescript Benchmark:
 // https://github.com/arktypeio/arktype/tree/main/ark/attest
 // https://www.youtube.com/watch?v=AEA0K77qhS4
 
+// TODO: Make this method a singleton
+// class MyClass {
+//   constructor() {
+//     if (MyClass._instance) {
+//       throw new Error("Singleton classes can't be instantiated more than once.")
+//     }
+//     MyClass._instance = this
+
+//     // ... Your rest of the constructor code goes after this
+//   }
+// }
+
+/**
+ * Create a DynamoDB Client
+ */
 export default function DynamoDbClient<
   DbSchema extends DbSchemaType,
   VerboseType extends boolean,
   ValidateType extends boolean,
+  SchemalessType extends boolean,
 >({
   region,
   dbSchema,
@@ -33,7 +43,7 @@ export default function DynamoDbClient<
   verbose: VerboseType
   validate: ValidateType
   maxAttempts: number
-  schemaless: boolean
+  schemaless: SchemalessType
 }) {
   const ddb_client = new DynamoDBClient({ region, maxAttempts })
   const ddb = DynamoDBDocument.from(ddb_client)
@@ -46,13 +56,6 @@ export default function DynamoDbClient<
     batchWrite: () => {},
     transactGet: () => {},
     transactWrite: () => {},
-  }
-  type globalOpsType = typeof globalOps
-  type tableOpsType = {
-    // TODO: Allow undefined table names
-    [key in keyof DbSchema]: ReturnType<
-      typeof TableOperationsPrototype<DbSchema[key], typeof flags>
-    >
   }
 
   const handler = {
@@ -67,13 +70,29 @@ export default function DynamoDbClient<
 
       if (prop in target) return Reflect.get(target, prop, receiver)
 
-      const tableName = prop // as keyof DbSchema
+      const tableName = prop
       const schema = tableName in dbSchema ? dbSchema[tableName] : null
-      if (!schema) throw 'Table is not defined in the schema' // TODO: Override and allow access
+      if (!schema && !schemaless) throw 'Table is not defined in the schema'
       return TableOperationsPrototype({ ddb, flags, schema, tableName })
     },
   }
 
   const client = new Proxy(globalOps, handler)
+
+  type globalOpsType = typeof globalOps
+  type schemalessTableOpsType = SchemalessType extends true
+    ? {
+        [key: string]: ReturnType<
+          typeof TableOperationsPrototype<any, typeof flags>
+        >
+      }
+    : // biome-ignore lint/complexity/noBannedTypes: Allow empty object
+      {}
+  type tableOpsType = {
+    [key in keyof DbSchema]: ReturnType<
+      typeof TableOperationsPrototype<DbSchema[key], typeof flags>
+    >
+  } & schemalessTableOpsType
+
   return client as globalOpsType & tableOpsType
 }

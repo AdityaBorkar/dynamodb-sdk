@@ -1,0 +1,7 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/index.ts"],
+  "out": "./.docs"
+  //   "exclude": ["**/node_modules/**", "**/build/**", "**/tests/**"]
+  //   src/index.ts --out '.docs-html' --json '.docs-json' --exclude './tests/**/*' --readme './README.md'
+}

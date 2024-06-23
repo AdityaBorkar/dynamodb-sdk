@@ -10,7 +10,7 @@ export default class ScanOperation extends MethodBuilder<ScanCommandInput> {
     ddb: DynamoDBDocument
     tableName: string
     verbose: boolean
-    schema: SchemaType
+    schema: TableSchemaType
     indexName?: string
     condition: string
   }) {

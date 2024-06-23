@@ -1,31 +1,25 @@
-import type {
-  ZodDiscriminatedUnion,
-  ZodNumber,
-  ZodObject,
-  ZodString,
-  ZodUnion,
-} from 'zod'
-
 import { z } from 'zod'
 
-type TwoKeyRecord<K extends string, V> = { [P in K]: V } & {
-  [P in string]: P extends K ? V : never
-  // biome-ignore lint/complexity/noBannedTypes: <explanation>
-} & (K extends any ? ([K] extends [string] ? {} : never) : never)
-
+import type { ZodNumber, ZodObject, ZodString, ZodUnion } from 'zod'
 type ZodObjectAny = ZodObject<any>
 
-// The partition key of an item is also known as its hash attribute. The term hash attribute derives from the use of an internal hash function in DynamoDB that evenly distributes data items across partitions, based on their partition key values.
-// The sort key of an item is also known as its range attribute. The term range attribute derives from the way DynamoDB stores items with the same partition key physically close together, in sorted order by the sort key value.
-// Each table in DynamoDB has a quota of 20 global secondary indexes (default quota) and 5 local secondary indexes.
+// TODO: Each table in DynamoDB has a quota of 20 global secondary indexes (default quota) and 5 local secondary indexes.
+// TODO: How to separate Hash Key and Sort Key?
 
 /**
+ * We support only a subset of Zod and we request you to import that from `dynamodb-sdk-resolvers` package.
+ * In the future, we shall support more Zod types and allow imports from Zod directly.
  * Note: Asynchronous refinements or transforms are not supported.
+ * @params schema - Zod Object
+ * @params schema.keys - Zod Object
+ * @params schema.attributes - Zod Object
+ * @params schema.indices - Zod Object
+ *
  */
 export default function createSchema_zod<
   KT extends TwoKeyRecord<string, ZodString | ZodNumber>, // TODO: Add Binary
   AT extends ZodObjectAny | [ZodObjectAny, ZodObjectAny, ...ZodObjectAny[]],
->($schema: {
+>(schema: {
   keys: KT
   attributes: AT
   indices?: {
@@ -40,32 +34,47 @@ export default function createSchema_zod<
     // }
   }
 }) {
-  // :
-  const keys = z.object($schema.keys as KT)
-  const attributes = Array.isArray($schema.attributes)
-    ? z.discriminatedUnion('attributes', $schema.attributes)
-    : $schema.attributes
-  const item = Array.isArray($schema.attributes)
-    ? z.discriminatedUnion(
-        'item',
-        $schema.attributes.map(schema => schema.merge(keys)),
-      )
-    : $schema.attributes.merge(keys)
-  // TODO - FIX IT
+  const keys = z.object(schema.keys as KT)
 
-  const validate = (data: any) => item.safeParse(data)
+  const attributes = (
+    Array.isArray(schema.attributes)
+      ? z.union(schema.attributes)
+      : schema.attributes
+  ) as AT extends ZodObjectAny ? AT : ZodUnion<AT> // TODO: Prevent use of 'as'
 
-  // const debug = null as unknown as z.infer<typeof item>
+  const item = Array.isArray(schema.attributes) // TODO: Add Proper Type Defination for item
+    ? z.union(schema.attributes.map(schema => schema.merge(keys)))
+    : schema.attributes.merge(keys)
 
-  const $typings = {
-    // debug,
+  const validate = (data: any) => item.safeParse(data) //  as typeof $typings.item
+
+  const _typings = {
     keys: null as unknown as z.infer<typeof keys>,
-    item: null as unknown as z.infer<typeof item>,
     attributes: null as unknown as z.infer<typeof attributes>,
-    // item: null as unknown as T['keys'] & T['attributes'],
-    // fields: null as unknown as z.infer<(typeof schemaTypings)['fields']>,
+    item: null as unknown as z.infer<typeof keys> & z.infer<typeof attributes>,
   }
 
-  type ReturnType = TableSchema<KT, AT>
-  return { keys, item, $typings, validate, attributes } satisfies ReturnType
+  return {
+    /**
+     * Zod schema for table keys
+     */
+    keys,
+    /**
+     * Zod schema for table attributes (except keys)
+     */
+    attributes,
+    /**
+     * Zod schema for table item
+     */
+    item,
+    /**
+     * Zod schema validation function for table item
+     */
+    validate,
+    /**
+     * @private @internal
+     * Exclusive for internal type inference and are not meant to be used directly.
+     */
+    _typings,
+  }
 }

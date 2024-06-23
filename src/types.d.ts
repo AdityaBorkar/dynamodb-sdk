@@ -1,4 +1,4 @@
-type SchemaType = {
+type TableSchemaType = {
   keys: SchemaKeyType
   fields: SchemaItemType
 }

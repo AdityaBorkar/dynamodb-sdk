@@ -9,7 +9,7 @@ export default class BatchWriteOperation extends MethodBuilder<BatchWriteCommand
   constructor(props: {
     ddb: DynamoDBDocument
     verbose: boolean
-    schema: SchemaType
+    schema: TableSchemaType
     limitToOneTable: boolean
   }) {
     const { ddb, verbose, schema, limitToOneTable } = props
