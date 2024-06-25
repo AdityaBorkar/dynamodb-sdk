@@ -11,6 +11,11 @@ const UsersSchema = ZodSchemaResolver({
 const ProjectsSchema = ZodSchemaResolver({
   keys: { id: z.string() },
   attributes: z.object({
+    name: z.string(),
+    creator: z.object({
+      id: z.string(),
+      name: z.string(),
+    }),
     slug: z.string().optional(),
   }),
 })
@@ -28,7 +33,7 @@ export const dbSchema = {
   SyncStatus: SyncStatusSchema,
 } as const
 
-const client = DynamoDbClient({
+const db = DynamoDbClient({
   dbSchema,
   verbose: false,
   validate: false,
@@ -37,7 +42,52 @@ const client = DynamoDbClient({
   schemaless: false,
 })
 
-client.Projects.put({
+// ---
+
+const test1 = db.Projects.update({
   id: '1',
-  slug: 'project-1',
+}).data({
+  name: 'Project 1',
+  slug: $ => $.createIfNotExists('Project 1'),
+  // creator: {
+  //   id: $ => $.delete(),
+  // },
 })
+
+// const example1 = client.Projects.put({
+//   id: '1',
+//   name: 'Project 1',
+//   creator: {
+//     id: '1',
+//     name: 'User 1',
+//   },
+// })
+//   .values(true)
+//   .execute({})
+
+// example1.then(d => {
+//   d.data
+// })
+
+// client.Projects.update({
+//   id: '1',
+// }).data({
+//   name: 'Project 1',
+//   slug: $ => $.createIfNotExists('Project 1'),
+//   creator: {
+//     id: $ => $.delete(),
+//   },
+//   // creator: $ => $.delete,
+//   // creator: {
+//   //   id: '1',
+//   //   name: 'User 1',
+//   // },
+// })
+// // .consistent()
+// // .values(['slug', 'creator'])
+
+// client.Projects.get({
+//   id: '1',
+// })
+//   .consistent()
+//   .values(['slug', 'creator'])

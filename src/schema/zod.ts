@@ -6,6 +6,11 @@ type ZodObjectAny = ZodObject<any>
 // TODO: Each table in DynamoDB has a quota of 20 global secondary indexes (default quota) and 5 local secondary indexes.
 // TODO: How to separate Hash Key and Sort Key?
 
+// You can use any attribute name in a document path as long as they meet these requirements:
+// - The attribute name must begin with a pound sign (#)
+// - The first character is a-z or A-Z and or 0-9
+// - The second character (if present) is a-z, A-Z
+
 /**
  * We support only a subset of Zod and we request you to import that from `dynamodb-sdk-resolvers` package.
  * In the future, we shall support more Zod types and allow imports from Zod directly.

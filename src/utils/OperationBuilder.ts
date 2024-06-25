@@ -1,5 +1,4 @@
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import type SchemaPrototype from './SchemaPrototype'
 
 /**
  * @private
@@ -8,18 +7,18 @@ import type SchemaPrototype from './SchemaPrototype'
  * TODO: Add all functions used to create a method and then just call the method and construct objects.
  */
 export default class OperationBuilder<
-  ST extends TableSchemaType,
+  TS extends TableSchema,
   FT extends FlagType,
   CT,
 > {
   protected ddb: DynamoDBDocument
-  protected schema: SchemaPrototype<ST>
   protected command: CT
+  protected schema: TS
   protected flags: FT
 
   constructor(props: {
     ddb: DynamoDBDocument
-    schema: SchemaPrototype<ST>
+    schema: TS
     command: CT
     flags: FT
   }) {

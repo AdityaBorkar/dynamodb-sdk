@@ -1,6 +1,6 @@
 import type { DynamoDBDocument, QueryCommandInput } from '@aws-sdk/lib-dynamodb'
 
-import getSstTableName from '../../utils/getSstTableName'
+import getSstTableName from '@/utils/getSstTableName'
 import MethodBuilder from './MethodBuilder'
 import CompileConditionExpression from './compiler/ConditionExpression'
 import CompileProjectionExpression from './compiler/ProjectionExpression'

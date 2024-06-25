@@ -4,7 +4,8 @@ import { Resource } from 'sst'
  * @private
  * Internal function to get the DynamoDB Table Name from SST.
  */
-export default function getSstTableName(tableName: string): string {
+export default function ResolveTableName(tableName: string): string {
+  return `DEV-MOCK:${tableName}`
   // @ts-expect-error: Bug in SST v3 Typings (`Resource`).
   // POST A BUG AND ATTACH LINK HERE
   // Warning: resource is defined as `any` in `resource` `resource.type` `resource.name`

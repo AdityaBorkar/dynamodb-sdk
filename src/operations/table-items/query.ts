@@ -2,13 +2,12 @@ import type {
   QueryCommandInput,
   QueryCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
-import type { ExtractSchemaAttributes } from '../../expressions/ProjectionExpression'
-import type { FlagType } from '../../utils/OperationFactory'
-import type { AnyObject, ExcludeNullableProps } from '../types'
+import type { ExtractSchemaAttributes } from '@/expressions/ProjectionExpression'
+import type { FlagType } from '@/utils/OperationFactory'
 
-import CompileProjectionExpression from '../../expressions/ProjectionExpression'
-import OperationErrorHandler from '../../utils/OperationErrorHandler'
-import OperationFactory from '../../utils/OperationFactory'
+import CompileProjectionExpression from '@/expressions/ProjectionExpression'
+import OperationErrorHandler from '@/utils/OperationErrorHandler'
+import OperationFactory from '@/utils/OperationFactory'
 
 type CommandInput = QueryCommandInput
 //  QueryCommandOutput
@@ -59,8 +58,8 @@ export default class QueryOperation<
    */
   values(
     attributes: [
-      ExtractSchemaAttributes<SchemaPrototype<TS>['fields']>,
-      ...ExtractSchemaAttributes<SchemaPrototype<TS>['fields']>[],
+      ExtractSchemaAttributes<TS['_typings']['attributes']>,
+      ...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
     ],
   ) {
     const params = CompileProjectionExpression(
@@ -106,6 +105,7 @@ export default class QueryOperation<
    *
    * @throws {TODO} Documentation shall be added soon
    */
+  // TODO: REDO
   async execute<ValidateValue extends boolean = FT['validate']>({
     validate,
     verbose,
@@ -135,14 +135,14 @@ export default class QueryOperation<
       },
     } as {
       data: ValidateValue extends true
-        ? Schema<TS>['item']
-        : Schema<TS>['item'] & AnyObject
+        ? TS['_typings']['item']
+        : TS['_typings']['item'] & Record<string, any>
       metadata: {
-        request: GetCommandOutput['$metadata']
+        request: QueryCommandOutput['$metadata']
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends
           | 'TOTAL'
           | 'INDEXES'
-          ? NonNullable<GetCommandOutput['ConsumedCapacity']>
+          ? NonNullable<QueryCommandOutput['ConsumedCapacity']>
           : null
       }
     }

@@ -2,12 +2,11 @@ import type {
   DeleteCommandInput,
   DeleteCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
-import type { FlagType } from '../../utils/OperationFactory'
-import type { AnyObject, ExcludeNullableProps } from '../types'
+import type { FlagType } from '@/utils/OperationFactory'
 
-import CompileConditionExpression from '../../expressions/ConditionExpression'
-import OperationErrorHandler from '../../utils/OperationErrorHandler'
-import OperationFactory from '../../utils/OperationFactory'
+import CompileConditionExpression from '@/expressions/ConditionExpression'
+import OperationErrorHandler from '@/utils/OperationErrorHandler'
+import OperationFactory from '@/utils/OperationFactory'
 
 type CommandInput = DeleteCommandInput
 
@@ -137,7 +136,7 @@ export default class DeleteOperation<
     } as {
       data: ValidateValue extends true
         ? TS['_typings']['item']
-        : TS['_typings']['item'] & AnyObject
+        : TS['_typings']['item'] & Record<string, any>
       metadata: {
         request: DeleteCommandOutput['$metadata']
         metrics: CIT['ReturnItemCollectionMetrics'] extends 'SIZE'

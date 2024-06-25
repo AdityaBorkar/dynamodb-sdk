@@ -1,3 +1,7 @@
+/**
+ * @internal @private
+ * @description AWS DynamoDB Attribute Types
+ */
 export const ATTRIBUTE_TYPE_DEF = {
   STRING: 'S',
   NUMBER: 'N',
@@ -12,6 +16,7 @@ export const ATTRIBUTE_TYPE_DEF = {
 }
 
 /**
+ * @internal @private
  * @description Reserved Keywords for DynamoDB
  * const keys = `COPY THE OBJECT AND PASTE IT HERE`
  * const KEYS = keys.trim().split("\n").map(key => key.trim())

@@ -2,14 +2,41 @@ import type {
   UpdateCommandInput,
   UpdateCommandOutput,
 } from '@aws-sdk/lib-dynamodb'
-import type { FlagType } from '../../utils/OperationFactory'
-import type { AnyObject, ExcludeNullableProps, _DbFieldType } from '../types'
+import type { FlagType } from '@/utils/OperationFactory'
 
-import CompileConditionExpression from '../../expressions/ConditionExpression'
-import OperationErrorHandler from '../../utils/OperationErrorHandler'
-import OperationFactory from '../../utils/OperationFactory'
+import CompileConditionExpression from '@/expressions/ConditionExpression'
+import OperationErrorHandler from '@/utils/OperationErrorHandler'
+import OperationFactory from '@/utils/OperationFactory'
+import EvaluateUpdateExpression from '@/expressions/UpdateExpression'
 
 type CommandInput = UpdateCommandInput
+
+type UpdateDataOps<RT> = {
+  delete: () => { $delete: true }
+} & {
+  createIfNotExists: (value: RT) => { $createIfNotExists: RT }
+} & (RT extends number
+    ? { $add: number } | { $subtract: number }
+    : RT extends any[]
+      ? { $push: RT } | { $unshift: RT }
+      : // biome-ignore lint/complexity/noBannedTypes: <explanation>
+        {})
+
+type UpdateDataInput<T> = {
+  [K in keyof T]?:
+    | T[K]
+    | UpdateDataInput<T[K]>
+    | ((
+        // TODO: THERE CAN BE MULTIPLE OPERATIONS FOR A SINGLE VARIABLE
+        $: UpdateDataOps<T[K]>,
+      ) =>
+        | { $delete: true }
+        | { $add: number }
+        | { $subtract: number }
+        | { $push: T[K] }
+        | { $unshift: T[K] }
+        | { $createIfNotExists: T[K] })
+}
 
 export default class UpdateOperation<
   TS extends TableSchema,
@@ -33,63 +60,33 @@ export default class UpdateOperation<
     >
   }
 
-  // TODO: COMMA SEPARATED
-
   /**
+   * TODO: Write docs
    * Adds one or more attributes to an item. If any of these attributes already exists, they are overwritten by the new values.
-   * You can also use SET to add or subtract from an attribute that is of type Number. Example: SET myNum = myNum + :val
    */
   data(
-    c: TS['_typings']['attributes'],
-    command: {
-      [attribute: string]:
-        | { $action: 'APPEND_LIST'; $value: (string | number | boolean)[] } // TODO: extends [] ?
-        | { $action: 'ADD' | 'SUBTRACT'; $value: number } // TODO: extends number ?
-        | (
-            | { $action: 'CREATE_IF_NOT_EXISTS'; $value: _DbFieldType }
-            | { $action: 'DELETE' }
-            | _DbFieldType
-          )
-    },
+    command: UpdateDataInput<TS['_typings']['attributes']>,
+    options?: { merge?: boolean | { array: boolean; object: boolean } },
   ) {
-    // ...
+    const params = EvaluateUpdateExpression(command, this.schema.item, options)
+    return this.#CLONE_INSTANCE<'data', typeof params>(params)
   }
 
-  /**
-   * Adds the specified value to the item, if the attribute does not already exist. If the attribute already exists, the behavior of ADD depends on the attribute's data type:
-   * - If the attribute is a number, and the value you are adding is also a number, Arithmetic operation occurs withb default value as 0.
-   * - If the attribute is a set, and the value you are adding is also a set, the value is appended to the existing set.
-   * TODO: ADD can only be used on top-level attributes, not nested attributes.
-   * TODO: Merge with the above
-   */
-  add(command: {
-    [attribute: string]: (string | number | boolean)[] | number
-  }) {
-    //     add-action ::=
-    //     path value
-  }
-
-  /**
-   * Removes one or more attributes from an item.
-   * TODO: TRY TO MERGE BOTH of them:
-   */
-  remove(command: {
-    [attribute: string]: (string | number | boolean)[]
-  }) {}
-
-  /**
-   * Removes one or more elements from a set.
-   * TODO: Specifying an empty set is an error
-   * TODO: DELETE can only be used on top-level attributes, not nested attributes.
-   */
-  delete(command: {
-    [attribute: string]: (string | number | boolean)[]
-  }) {
-    // DELETE Color :p
-    // :p = {"SS": ["Yellow", "Purple"]}
-  }
-
-  // You can have many actions in a single expression, such as the following: SET a=:value1, b=:value2 DELETE :value3, :value4, :value5
+  // delete(
+  //   attributes: [
+  //     ExtractSchemaAttributes<TS['_typings']['attributes']>,
+  //     ...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
+  //   ],
+  // ) {
+  //   // TODO: DELETE THESE ATTRIBUTES
+  //   // TODO: CHECK IF ATTRIBUTES ARE PRESENT.
+  //   // const params = EvaluateUpdateExpression(command, this.schema.item)
+  //   const params = {
+  //     UpdateExpression: 'DELETE ' + attributes.join(', '),
+  //   }
+  //   // TODO: RESOLVE as REMOVE
+  //   return this.#CLONE_INSTANCE<'data', typeof params>(params)
+  // }
 
   /**
    * A condition that must be satisfied in order for operation to succeed.
@@ -103,8 +100,8 @@ export default class UpdateOperation<
     return this.#CLONE_INSTANCE<'ifCondition', typeof params>(params)
   }
 
-  // TODO: CLEAN AND UNIFORMITY + DOCS
   /**
+   * TODO: CLEAN AND UNIFORMITY + DOCS
    * Use this method if you want to get the item attributes as they appeared before they were updated.
    *
    * Note - The values returned are strongly consistent and no RCUs are consumed.
@@ -197,7 +194,7 @@ export default class UpdateOperation<
       data: CIT['ReturnValues'] extends 'ALL_OLD'
         ? ValidateValue extends true
           ? TS['_typings']['item']
-          : TS['_typings']['item'] & AnyObject
+          : TS['_typings']['item'] & Record<string, any>
         : null
       metadata: {
         request: UpdateCommandOutput['$metadata']

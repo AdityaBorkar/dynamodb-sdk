@@ -1,10 +1,9 @@
 import type { PutCommandInput, PutCommandOutput } from '@aws-sdk/lib-dynamodb'
-import type { FlagType } from '../../utils/OperationFactory'
-import type { AnyObject, ExcludeNullableProps } from '../types'
+import type { FlagType } from '@/utils/OperationFactory'
 
-import CompileConditionExpression from '../../expressions/ConditionExpression'
-import OperationErrorHandler from '../../utils/OperationErrorHandler'
-import OperationFactory from '../../utils/OperationFactory'
+import CompileConditionExpression from '@/expressions/ConditionExpression'
+import OperationErrorHandler from '@/utils/OperationErrorHandler'
+import OperationFactory from '@/utils/OperationFactory'
 
 type CommandInput = PutCommandInput
 
@@ -59,7 +58,7 @@ export default class PutOperation<
       ReturnValuesOnConditionCheckFailure: (values === 'ON_CONDITION_FAILURE'
         ? 'ALL_OLD'
         : 'NONE') as RVCFT,
-    }
+    } as const
     return this.#CLONE_INSTANCE<'values', typeof params>(params)
   }
 
@@ -130,7 +129,7 @@ export default class PutOperation<
       data: CIT['ReturnValues'] extends 'ALL_OLD'
         ? ValidateValue extends true
           ? TS['_typings']['item']
-          : TS['_typings']['item'] & AnyObject
+          : TS['_typings']['item'] & Record<string, any>
         : null
       metadata: {
         request: PutCommandOutput['$metadata']

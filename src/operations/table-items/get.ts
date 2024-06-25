@@ -1,11 +1,10 @@
 import type { GetCommandInput, GetCommandOutput } from '@aws-sdk/lib-dynamodb'
-import type { ExtractSchemaAttributes } from '../../expressions/ProjectionExpression'
-import type { FlagType } from '../../utils/OperationFactory'
-import type { AnyObject, ExcludeNullableProps } from '../types'
+import type { ExtractSchemaAttributes } from '@/expressions/ProjectionExpression'
+import type { FlagType } from '@/utils/OperationFactory'
 
-import CompileProjectionExpression from '../../expressions/ProjectionExpression'
-import OperationErrorHandler from '../../utils/OperationErrorHandler'
-import OperationFactory from '../../utils/OperationFactory'
+import CompileProjectionExpression from '@/expressions/ProjectionExpression'
+import OperationErrorHandler from '@/utils/OperationErrorHandler'
+import OperationFactory from '@/utils/OperationFactory'
 
 type CommandInput = GetCommandInput
 
@@ -113,7 +112,7 @@ export default class GetOperation<
     } as {
       data: ValidateValue extends true
         ? TS['_typings']['item']
-        : TS['_typings']['item'] & AnyObject
+        : TS['_typings']['item'] & Record<string, any>
       metadata: {
         request: GetCommandOutput['$metadata']
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends

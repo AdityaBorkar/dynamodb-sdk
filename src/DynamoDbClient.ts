@@ -3,22 +3,13 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import TableOperationsPrototype from './utils/TableOperationsPrototype'
 
 // TODO: Enable multi-zone and multi-account access
-// TODO: Manage multiple instances
-
-// TODO: Support: ArkType, Zod, Superstruct
-// TODO: Measure Typescript Benchmark:
-// https://github.com/arktypeio/arktype/tree/main/ark/attest
-// https://www.youtube.com/watch?v=AEA0K77qhS4
-
+// TODO: Manage multiple instances even in schemaless
 // TODO: Make this method a singleton
 // class MyClass {
 //   constructor() {
-//     if (MyClass._instance) {
+//     if (MyClass._instance)
 //       throw new Error("Singleton classes can't be instantiated more than once.")
-//     }
 //     MyClass._instance = this
-
-//     // ... Your rest of the constructor code goes after this
 //   }
 // }
 
@@ -64,15 +55,12 @@ export default function DynamoDbClient<
       prop: T,
       receiver: T extends keyof globalOpsType ? globalOpsType[T] : any,
     ) => {
-      //   T extends keyof globalOpsType
-      //   ? ReturnType<(typeof globalOps)[T]>
-      //   : ReturnType<typeof TableOperationsPrototype<DbSchema[T], typeof flags>>
-
       if (prop in target) return Reflect.get(target, prop, receiver)
 
       const tableName = prop
       const schema = tableName in dbSchema ? dbSchema[tableName] : null
       if (!schema && !schemaless) throw 'Table is not defined in the schema'
+      // @ts-expect-error `schema` can be null. Need to fix this.
       return TableOperationsPrototype({ ddb, flags, schema, tableName })
     },
   }

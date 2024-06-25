@@ -4,11 +4,13 @@ export default function CompileProjectionExpression(
   attributes: string[],
   schema: SchemaItemType,
 ) {
+  // TODO: Access inner properties with "hello["world"]". THIS APPLIES ONLY FOR PROJECTION EXPRESSION
+
   // TODO: Support `[]`
+
   let ExpressionAttributeNames = {} as { [key: string]: string }
   const ProjectionExpression = attributes
     .map(attr => {
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       let $schema = schema as any
       let flag = false
       const path = attr.split('.')

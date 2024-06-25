@@ -222,9 +222,9 @@ export default function CompileConditionExpression(
     const prefix = expression.slice(0, parseIndex)
     const errorChar = expression[parseIndex]
     const suffix = expression.slice(parseIndex + 1, expression.length)
-    console.log(
-      `${chalk.white(prefix)}${chalk.bgRed.white(errorChar)}${chalk.gray(suffix)}`,
-    )
+    // console.log(
+    //   `${chalk.white(prefix)}${chalk.bgRed.white(errorChar)}${chalk.gray(suffix)}`,
+    // )
     throw `[${parseIndex}: SYNTAX ERROR] ${err}`
   }
 

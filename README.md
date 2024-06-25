@@ -3,7 +3,7 @@
 <br/>
 <br/>
 <hr/>
-<h1>Work in Progress. Expect to be completed by 24th June 2024. Stay Tuned.
+<h1>Work in Progress. Expect to be completed by 30th June 2024. Stay Tuned.
 </h1>
 <hr/>
 <!--  -->
@@ -36,6 +36,10 @@ dynamodb-sdk is an open-source community project and NOT affiliated with AWS or 
 
 `dynamodb-sdk` is a wrapper around the `@aws-sdk/client-dynamodb` that uses data validation libraries to provide a more user-friendly interface for working with DynamoDB. It is designed to be used with TypeScript and provides a more intuitive way to interact with DynamoDB tables and indexes. It includes strongly typed classes and methods, query and scan builders, and much more.
 
+> Note: While we are still BETA, we are feature-complete and safe* to be included in small projects.
+> We are collecting feedback until September 30th, 2024.
+> Release v1 is tentatively scheduled for October 2024.
+> Fill this out for feature requests or feedback.
 
 - Built with Typescript
 - Strongly typed methods
