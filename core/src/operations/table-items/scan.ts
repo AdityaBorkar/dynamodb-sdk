@@ -1,21 +1,46 @@
+import type { FlagType } from 'package/src/utils/OperationFactory'
+import OperationFactory from 'package/src/utils/OperationFactory'
 import type { ScanCommandInput, ScanCommandOutput } from '@aws-sdk/lib-dynamodb'
 
 type CommandInput = ScanCommandInput
 type CommandOutput = ScanCommandOutput
 
-export default class ScanOperation {
+export default class ScanOperation<
+  TS extends TableSchema,
+  FT extends FlagType,
+  CIT extends CommandInput,
+  OT extends string,
+> extends OperationFactory<TS, FT, CIT> {
+  #CLONE_INSTANCE<
+    OmitMethodName extends string,
+    PartialCommand extends Partial<CommandInput>,
+  >(newCommand: PartialCommand) {
+    const { ddb, schema, flags, command: _command } = this
+    const command = { ..._command, ...newCommand } as const
+    const props = { ddb, schema, flags, command }
+    type CT = typeof command
+    type FT = typeof this.flags
+    type _OT = OT | OmitMethodName
+    return new ScanOperation(props) as Omit<ScanOperation<TS, FT, CT, _OT>, _OT>
+  }
+
+  // Segment
+  // TotalSegments
+
   // TableName
   // IndexName
+
   // ConsistentRead
   // Limit
   // Select
-  // Segment
-  // TotalSegments
   // ExclusiveStartKey
+
   // FilterExpression
   // ProjectionExpression
+
   // ExpressionAttributeNames
   // ExpressionAttributeValues
+
   // ReturnConsumedCapacity: "NONE" "TOTAL" "INDEXES"
 }
 

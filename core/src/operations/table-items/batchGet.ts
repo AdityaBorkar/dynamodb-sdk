@@ -11,6 +11,8 @@ export default class BatchGetOperation {
   // ReturnConsumedCapacity: "NONE" "TOTAL" "INDEXES"
 }
 
+// TODO: Single operation has a limit of 100 items.
+
 // If you request more than 100 items, BatchGetItem returns a ValidationException with the message "Too many items requested for the BatchGetItem call."
 // CATCH: ValidationException ProvisionedThroughputExceededException
 // CATCH: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Programming.Errors.html#BatchOperations

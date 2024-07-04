@@ -1,4 +1,4 @@
-import { DynamoDbClient } from '@/index'
+import { DynamoDbClient } from 'package/src/index'
 import { dbSchema } from './example'
 import { describe, it } from 'vitest'
 import { attest } from '@arktype/attest'

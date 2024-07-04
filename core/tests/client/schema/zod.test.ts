@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ZodSchemaResolver } from '@/index'
+import { ZodSchemaResolver } from 'package/src/index'
 
 import { expect, describe, it } from 'vitest'
 

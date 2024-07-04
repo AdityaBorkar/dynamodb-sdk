@@ -11,6 +11,7 @@ export default class BatchWriteOperation {
   // ReturnConsumedCapacity: "NONE" "TOTAL" "INDEXES"
   // ReturnItemCollectionMetrics: "NONE" "SIZE"
 }
+// TODO: Limit up to 25 item put or delete operations
 
 // * If one or more of the following is true, DynamoDB rejects the entire batch write operation:
 // One or more tables specified in the BatchWriteItem request does not exist.

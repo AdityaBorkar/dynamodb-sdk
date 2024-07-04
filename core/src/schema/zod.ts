@@ -51,7 +51,24 @@ export default function createSchema_zod<
     ? z.union(schema.attributes.map(schema => schema.merge(keys)))
     : schema.attributes.merge(keys)
 
-  const validate = (data: any) => item.safeParse(data) //  as typeof $typings.item
+  const validate = (data: any) => {
+    // TODO: Standardize ValidationResult
+    if (!Array.isArray(data)) return item.safeParse(data) //  as typeof $typings.item
+
+    const result = { data: null, error: null, success: true }
+    for (const d of data) {
+      const res = item.safeParse(data) //  as typeof $typings.item
+      if (res.success) {
+        result.data.push(res.data)
+      } else {
+        result.success = false
+        result.error.push(res.error)
+      }
+    }
+    return result
+  }
+
+  // TODO: Include Indexes
 
   const _typings = {
     keys: null as unknown as z.infer<typeof keys>,

@@ -1,16 +1,13 @@
-import type {
-  DeleteCommandInput,
-  DeleteCommandOutput,
-} from '@aws-sdk/lib-dynamodb'
-import type { FlagType } from '@/utils/OperationFactory'
+import type { PutCommandInput, PutCommandOutput } from '@aws-sdk/lib-dynamodb'
+import type { FlagType } from 'package/src/utils/OperationFactory'
 
-import CompileConditionExpression from '@/expressions/ConditionExpression'
-import OperationErrorHandler from '@/utils/OperationErrorHandler'
-import OperationFactory from '@/utils/OperationFactory'
+import CompileConditionExpression from 'package/src/expressions/ConditionExpression'
+import OperationErrorHandler from 'package/src/utils/OperationErrorHandler'
+import OperationFactory from 'package/src/utils/OperationFactory'
 
-type CommandInput = DeleteCommandInput
+type CommandInput = PutCommandInput
 
-export default class DeleteOperation<
+export default class PutOperation<
   TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
@@ -26,10 +23,7 @@ export default class DeleteOperation<
     type CT = typeof command
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
-    return new DeleteOperation(props) as Omit<
-      DeleteOperation<TS, FT, CT, _OT>,
-      _OT
-    >
+    return new PutOperation(props) as Omit<PutOperation<TS, FT, CT, _OT>, _OT>
   }
 
   /**
@@ -45,7 +39,7 @@ export default class DeleteOperation<
   }
 
   /**
-   * Use this method if you want to get the item attributes as they appeared before they were deleted.
+   * Use this method if you want to get the item attributes as they appeared before they were updated.
    *
    * Note - The values returned are strongly consistent and no RCUs are consumed.
    *
@@ -64,7 +58,7 @@ export default class DeleteOperation<
       ReturnValuesOnConditionCheckFailure: (values === 'ON_CONDITION_FAILURE'
         ? 'ALL_OLD'
         : 'NONE') as RVCFT,
-    }
+    } as const
     return this.#CLONE_INSTANCE<'values', typeof params>(params)
   }
 
@@ -114,15 +108,13 @@ export default class DeleteOperation<
     this.flags.validate ??= validate ?? false
 
     const response = await this.ddb
-      .delete(this.command)
+      .put(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        this.logger('Delete Operation Request: ', this.command)
-        this.logger('Delete Operation Response: ', response)
+        this.logger('Put Operation Request: ', this.command)
+        this.logger('Put Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
-
-    response.ItemCollectionMetrics
 
     const output = {
       data: this.flags.validate
@@ -134,18 +126,20 @@ export default class DeleteOperation<
         consumedCapacity: response.ConsumedCapacity || null,
       },
     } as {
-      data: ValidateValue extends true
-        ? TS['_typings']['item']
-        : TS['_typings']['item'] & Record<string, any>
+      data: CIT['ReturnValues'] extends 'ALL_OLD'
+        ? ValidateValue extends true
+          ? TS['_typings']['item']
+          : TS['_typings']['item'] & Record<string, any>
+        : null
       metadata: {
-        request: DeleteCommandOutput['$metadata']
+        request: PutCommandOutput['$metadata']
         metrics: CIT['ReturnItemCollectionMetrics'] extends 'SIZE'
-          ? DeleteCommandOutput['ItemCollectionMetrics']
+          ? NonNullable<PutCommandOutput['ItemCollectionMetrics']>
           : null
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends
           | 'TOTAL'
           | 'INDEXES'
-          ? DeleteCommandOutput['ConsumedCapacity']
+          ? NonNullable<PutCommandOutput['ConsumedCapacity']>
           : null
       }
     }

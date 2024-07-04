@@ -3,14 +3,14 @@ import type { FlagType } from './OperationFactory'
 
 import ResolveTableName from './ResolveTableName'
 
-import BatchGetOperation from '@/operations/table-items/batchGet'
-import BatchWriteOperation from '@/operations/table-items/batchWrite'
-import DeleteOperation from '@/operations/table-items/delete'
-import GetOperation from '@/operations/table-items/get'
-import PutOperation from '@/operations/table-items/put'
-import QueryOperation from '@/operations/table-items/query'
-import ScanOperation from '@/operations/table-items/scan'
-import UpdateOperation from '@/operations/table-items/update'
+import BatchGetOperation from 'package/src/operations/table-items/batchGet'
+import BatchWriteOperation from 'package/src/operations/table-items/batchWrite'
+import DeleteOperation from 'package/src/operations/table-items/delete'
+import GetOperation from 'package/src/operations/table-items/get'
+import PutOperation from 'package/src/operations/table-items/put'
+import QueryOperation from 'package/src/operations/table-items/query'
+import ScanOperation from 'package/src/operations/table-items/scan'
+import UpdateOperation from 'package/src/operations/table-items/update'
 
 /**
  * @internal @private
@@ -30,8 +30,8 @@ export default function TableOperationsPrototype<
 
   return {
     /**
-     * Returns the attributes of one or more items from one or more tables.
-     * TODO: A single operation can retrieve up to 16 MB of data, which can contain as many as 100 items.
+     * Returns the attributes of upto 100 items from one or more tables.
+     * Single operation call has a limit of 16 MB of data.
      * @docs {@link https://www.example.com/docs/table-items/batch-get | dynamodb-sdk Documentation}
      * @api {@link https://www.example.com/api/table-items/batch-get | dynamodb-sdk API Reference}
      * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/BatchGetItemCommand/ | AWS JS SDK (v3) API Reference}
@@ -42,8 +42,8 @@ export default function TableOperationsPrototype<
       return new BatchGetOperation<TS, FT, CIT, 'table'>(prop).table(tableName)
     },
     /**
-     * Puts or deletes multiple items in one or more tables.
-     * TODO: A single call to BatchWriteItem can transmit up to 16MB of data over the network, consisting of up to 25 item put or delete operations. While individual items can be up to 400 KB once stored, it's important to note that an item's representation might be greater than 400KB while being sent in DynamoDB's JSON format for the API call.
+     * Puts or deletes upto 25 items in one or more tables.
+     * Single operation call has a limit of 16 MB of data, with individual items being limited to 400 KB.
      * @docs {@link https://www.example.com/docs/table-items/batch-write | dynamodb-sdk Documentation}
      * @api {@link https://www.example.com/api/table-items/batch-write | dynamodb-sdk API Reference}
      * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/BatchWriteItemCommand/ | AWS JS SDK (v3) API Reference}
@@ -90,13 +90,23 @@ export default function TableOperationsPrototype<
       return new PutOperation<TS, FT, CIT, ''>({ ...prop, command })
     },
     /**
-     * You must provide the name of the partition key attribute and a single value for that attribute. Query returns all items with that partition key value. Optionally, you can provide a sort key attribute and use a comparison operator to refine the search results.
+     * Returns all items with the partition key value with maximum of 1 MB of data and then apply any filtering to the results using FilterExpression.
+     * Optionally, you can provide a sort key attribute and use a comparison operator to refine the search results.
      * @docs {@link https://www.example.com/docs/table-items/query | dynamodb-sdk Documentation}
      * @api {@link https://www.example.com/api/table-items/query | dynamodb-sdk API Reference}
      * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/QueryCommand/ | AWS JS SDK (v3) API Reference}
      */
-    query: (props: { indexName?: string; condition: string }) => {
-      const command = {}
+    query: (props: {
+      indexName?: TS['_typings']['keys']
+      ifCondition: string
+    }) => {
+      // TODO: `ifCondition` should be a KEY condition expression
+      // TODO: Do some processing of 'KeyConditionExpression'
+      const command = {
+        TableName,
+        IndexName: props.indexName,
+        KeyConditionExpression: props.ifCondition,
+      }
       type CIT = typeof command
       return new QueryOperation<TS, FT, CIT, ''>({ ...prop, command })
     },
@@ -106,8 +116,16 @@ export default function TableOperationsPrototype<
      * @api {@link https://www.example.com/api/table-items/scan | dynamodb-sdk API Reference}
      * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/ScanCommand/ | AWS JS SDK (v3) API Reference}
      */
-    scan: (props: { indexName?: string; condition: string }) => {
-      const command = {}
+    scan: (props: {
+      indexName?: TS['_typings']['keys']
+      ifCondition: string
+    }) => {
+      // TODO: Do some processing of 'KeyConditionExpression'
+      const command = {
+        TableName,
+        IndexName: props.indexName,
+        KeyConditionExpression: props.ifCondition,
+      }
       type CIT = typeof command
       return new ScanOperation<TS, FT, CIT, ''>({ ...prop, command })
     },

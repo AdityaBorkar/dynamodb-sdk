@@ -1,20 +1,14 @@
-import type {
-  QueryCommandInput,
-  QueryCommandOutput,
-} from '@aws-sdk/lib-dynamodb'
-import type { ExtractSchemaAttributes } from '@/expressions/ProjectionExpression'
-import type { FlagType } from '@/utils/OperationFactory'
+import type { GetCommandInput, GetCommandOutput } from '@aws-sdk/lib-dynamodb'
+import type { ExtractSchemaAttributes } from 'package/src/expressions/ProjectionExpression'
+import type { FlagType } from 'package/src/utils/OperationFactory'
 
-import CompileProjectionExpression from '@/expressions/ProjectionExpression'
-import OperationErrorHandler from '@/utils/OperationErrorHandler'
-import OperationFactory from '@/utils/OperationFactory'
+import CompileProjectionExpression from 'package/src/expressions/ProjectionExpression'
+import OperationErrorHandler from 'package/src/utils/OperationErrorHandler'
+import OperationFactory from 'package/src/utils/OperationFactory'
 
-type CommandInput = QueryCommandInput
-//  QueryCommandOutput
+type CommandInput = GetCommandInput
 
-// A single Query operation will read up to the maximum number of items set (if using the Limit parameter) or a maximum of 1 MB of data and then apply any filtering to the results using FilterExpression. If LastEvaluatedKey is present in the response, you will need to paginate the result set.
-
-export default class QueryOperation<
+export default class GetOperation<
   TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
@@ -30,25 +24,8 @@ export default class QueryOperation<
     type CT = typeof command
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
-    return new QueryOperation(props) as Omit<
-      QueryOperation<TS, FT, CT, _OT>,
-      _OT
-    >
+    return new GetOperation(props) as Omit<GetOperation<TS, FT, CT, _OT>, _OT>
   }
-
-  // TableName
-  // IndexName
-
-  // Limit
-  // Select
-  // ScanIndexForward
-  // ExclusiveStartKey
-
-  // FilterExpression
-  // ProjectionExpression
-  // KeyConditionExpression
-
-  // ReturnConsumedCapacity: "NONE" "TOTAL" "INDEXES"
 
   /**
    * Attributes to retrieve from the table. These attributes can include scalars, sets, or elements of a JSON document.
@@ -105,7 +82,6 @@ export default class QueryOperation<
    *
    * @throws {TODO} Documentation shall be added soon
    */
-  // TODO: REDO
   async execute<ValidateValue extends boolean = FT['validate']>({
     validate,
     verbose,
@@ -117,11 +93,11 @@ export default class QueryOperation<
     this.flags.validate ??= validate ?? false
 
     const response = await this.ddb
-      .query(this.command)
+      .get(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        this.logger('Query Operation Request: ', this.command)
-        this.logger('Query Operation Response: ', response)
+        this.logger('Get Operation Request: ', this.command)
+        this.logger('Get Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -138,11 +114,11 @@ export default class QueryOperation<
         ? TS['_typings']['item']
         : TS['_typings']['item'] & Record<string, any>
       metadata: {
-        request: QueryCommandOutput['$metadata']
+        request: GetCommandOutput['$metadata']
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends
           | 'TOTAL'
           | 'INDEXES'
-          ? NonNullable<QueryCommandOutput['ConsumedCapacity']>
+          ? NonNullable<GetCommandOutput['ConsumedCapacity']>
           : null
       }
     }

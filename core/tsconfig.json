@@ -17,7 +17,7 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["package/src/*"]
     }
   }
 }

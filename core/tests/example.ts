@@ -1,4 +1,4 @@
-import { DynamoDbClient, ZodSchemaResolver } from '@/index'
+import { DynamoDbClient, ZodSchemaResolver } from 'package/src/index'
 import { z } from 'zod'
 
 const UsersSchema = ZodSchemaResolver({

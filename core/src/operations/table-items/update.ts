@@ -1,13 +1,44 @@
-import type { PutCommandInput, PutCommandOutput } from '@aws-sdk/lib-dynamodb'
-import type { FlagType } from '@/utils/OperationFactory'
+import type {
+  UpdateCommandInput,
+  UpdateCommandOutput,
+} from '@aws-sdk/lib-dynamodb'
+import type { FlagType } from 'package/src/utils/OperationFactory'
 
-import CompileConditionExpression from '@/expressions/ConditionExpression'
-import OperationErrorHandler from '@/utils/OperationErrorHandler'
-import OperationFactory from '@/utils/OperationFactory'
+import CompileConditionExpression from 'package/src/expressions/ConditionExpression'
+import OperationErrorHandler from 'package/src/utils/OperationErrorHandler'
+import OperationFactory from 'package/src/utils/OperationFactory'
+import EvaluateUpdateExpression from 'package/src/expressions/UpdateExpression'
 
-type CommandInput = PutCommandInput
+type CommandInput = UpdateCommandInput
 
-export default class PutOperation<
+type UpdateDataOps<RT> = {
+  delete: () => { $delete: true }
+} & {
+  createIfNotExists: (value: RT) => { $createIfNotExists: RT }
+} & (RT extends number
+    ? { $add: number } | { $subtract: number }
+    : RT extends any[]
+      ? { $push: RT } | { $unshift: RT }
+      : // biome-ignore lint/complexity/noBannedTypes: <explanation>
+        {})
+
+type UpdateDataInput<T> = {
+  [K in keyof T]?:
+    | T[K]
+    | UpdateDataInput<T[K]>
+    | ((
+        // TODO: THERE CAN BE MULTIPLE OPERATIONS FOR A SINGLE VARIABLE
+        $: UpdateDataOps<T[K]>,
+      ) =>
+        | { $delete: true }
+        | { $add: number }
+        | { $subtract: number }
+        | { $push: T[K] }
+        | { $unshift: T[K] }
+        | { $createIfNotExists: T[K] })
+}
+
+export default class UpdateOperation<
   TS extends TableSchema,
   FT extends FlagType,
   CIT extends CommandInput,
@@ -23,8 +54,39 @@ export default class PutOperation<
     type CT = typeof command
     type FT = typeof this.flags
     type _OT = OT | OmitMethodName
-    return new PutOperation(props) as Omit<PutOperation<TS, FT, CT, _OT>, _OT>
+    return new UpdateOperation(props) as Omit<
+      UpdateOperation<TS, FT, CT, _OT>,
+      _OT
+    >
   }
+
+  /**
+   * TODO: Write docs
+   * Adds one or more attributes to an item. If any of these attributes already exists, they are overwritten by the new values.
+   */
+  data(
+    command: UpdateDataInput<TS['_typings']['attributes']>,
+    options?: { merge?: boolean | { array: boolean; object: boolean } },
+  ) {
+    const params = EvaluateUpdateExpression(command, this.schema.item, options)
+    return this.#CLONE_INSTANCE<'data', typeof params>(params)
+  }
+
+  // delete(
+  //   attributes: [
+  //     ExtractSchemaAttributes<TS['_typings']['attributes']>,
+  //     ...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
+  //   ],
+  // ) {
+  //   // TODO: DELETE THESE ATTRIBUTES
+  //   // TODO: CHECK IF ATTRIBUTES ARE PRESENT.
+  //   // const params = EvaluateUpdateExpression(command, this.schema.item)
+  //   const params = {
+  //     UpdateExpression: 'DELETE ' + attributes.join(', '),
+  //   }
+  //   // TODO: RESOLVE as REMOVE
+  //   return this.#CLONE_INSTANCE<'data', typeof params>(params)
+  // }
 
   /**
    * A condition that must be satisfied in order for operation to succeed.
@@ -39,14 +101,17 @@ export default class PutOperation<
   }
 
   /**
+   * TODO: CLEAN AND UNIFORMITY + DOCS
    * Use this method if you want to get the item attributes as they appeared before they were updated.
    *
    * Note - The values returned are strongly consistent and no RCUs are consumed.
    *
-   * @param {boolean | "ON_CONDITION_FAILURE"} [value=true] -
-   * - If `false`, returns nothing.
-   * - If `true`, returns the old values if condition succeeds.
-   * - If `"ON_CONDITION_FAILURE"`, returns the old values even if condition fails.
+   * @param {"NONE" | "ALL_OLD" | "UPDATED_OLD" | "ALL_NEW" | "UPDATED_NEW" | "ON_CONDITION_FAILURE"} [value="NONE"] -
+   * - `"NONE"` - returns nothing
+   * - `"UPDATED_OLD"` - only the updated attributes, as they appeared before the UpdateItem operation.
+   * - `"UPDATED_NEW"` - only the updated attributes, as they appear after the UpdateItem operation.
+   * - `"ALL_OLD"` - all of the attributes of the item, as they appeared before the UpdateItem operation.
+   * - `"ALL_NEW"` - all of the attributes of the item, as they appear after the UpdateItem operation.
    */
   values<VT extends true | false | 'ON_CONDITION_FAILURE' = true>(
     values: VT = true as VT,
@@ -58,7 +123,7 @@ export default class PutOperation<
       ReturnValuesOnConditionCheckFailure: (values === 'ON_CONDITION_FAILURE'
         ? 'ALL_OLD'
         : 'NONE') as RVCFT,
-    } as const
+    }
     return this.#CLONE_INSTANCE<'values', typeof params>(params)
   }
 
@@ -108,11 +173,11 @@ export default class PutOperation<
     this.flags.validate ??= validate ?? false
 
     const response = await this.ddb
-      .put(this.command)
+      .update(this.command)
       .catch(OperationErrorHandler)
       .finally(() => {
-        this.logger('Put Operation Request: ', this.command)
-        this.logger('Put Operation Response: ', response)
+        this.logger('Update Operation Request: ', this.command)
+        this.logger('Update Operation Response: ', response)
       })
     if (!response) throw new Error('Unhandled Error')
 
@@ -132,14 +197,14 @@ export default class PutOperation<
           : TS['_typings']['item'] & Record<string, any>
         : null
       metadata: {
-        request: PutCommandOutput['$metadata']
+        request: UpdateCommandOutput['$metadata']
         metrics: CIT['ReturnItemCollectionMetrics'] extends 'SIZE'
-          ? NonNullable<PutCommandOutput['ItemCollectionMetrics']>
+          ? UpdateCommandOutput['ItemCollectionMetrics']
           : null
         consumedCapacity: CIT['ReturnConsumedCapacity'] extends
           | 'TOTAL'
           | 'INDEXES'
-          ? NonNullable<PutCommandOutput['ConsumedCapacity']>
+          ? UpdateCommandOutput['ConsumedCapacity']
           : null
       }
     }

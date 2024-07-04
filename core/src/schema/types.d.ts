@@ -11,14 +11,14 @@ interface TableSchema {
     item: any
     attributes: any
   }
-  validate: (data: any) =>
+  validate: (data: any | any[]) =>
     | {
         success: false
         error: ZodError
       }
     | {
         success: true
-        data: any // TODO: Add Proper Type Defination
+        data: any | any[] // TODO: Add Proper Type Defination
       }
 }
 

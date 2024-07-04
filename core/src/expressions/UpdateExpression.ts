@@ -1,4 +1,4 @@
-import EscapeAttributeName from '@/utils/EscapeAttributeName'
+import EscapeAttributeName from 'package/src/utils/EscapeAttributeName'
 import { nanoid } from 'nanoid'
 
 export default function EvaluateUpdateExpression(
