@@ -1,0 +1,7 @@
+{
+  "name": "@dynamodb-sdk/superstruct",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "pkgs/superstruct",
+  "projectType": "application",
+  "targets": {}
+}

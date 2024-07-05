@@ -1,0 +1,7 @@
+{
+  "name": "@dynamodb-sdk/sst",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "pkgs/sst",
+  "projectType": "application",
+  "targets": {}
+}

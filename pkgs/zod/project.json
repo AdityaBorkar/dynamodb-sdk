@@ -1,0 +1,7 @@
+{
+  "name": "@dynamodb-sdk/zod",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "pkgs/zod",
+  "projectType": "application",
+  "targets": {}
+}

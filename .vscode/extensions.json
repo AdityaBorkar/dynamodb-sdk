@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "biomejs.biome",
+    "nrwl.angular-console",
+    "astro-build.astro-vscode"
+  ]
+}

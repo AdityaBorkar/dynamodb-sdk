@@ -1,0 +1,40 @@
+{
+  "name": "@dynamodb-sdk/monorepo",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "upgrade": "bun nx migrate latest && bun upgrade --latest",
+    "dev:app-name": "nx dev app-name",
+    "build:app-name": "nx build app-name"
+  },
+  "private": true,
+  "dependencies": {
+    "@nxtensions/astro": "latest",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "nx": "19.4.0",
+    "@nx/js": "19.4.0",
+    "@nx/workspace": "19.4.0",
+    "@swc-node/register": "~1.9.1",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
+    "@types/node": "18.16.9",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.0",
+    "typescript": "~5.4.2",
+    "ts-node": "10.9.1",
+    "@biomejs/biome": "^1.8.3",
+    "eslint": "~8.57.0",
+    "eslint-config-next": "14.2.3",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "tailwindcss": "3.4.3",
+    "postcss": "8.4.38",
+    "autoprefixer": "10.4.13",
+    "astro": "^4.3.5",
+    "@astrojs/check": "^0.5.2"
+  }
+}
