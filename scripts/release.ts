@@ -1,51 +1,48 @@
-// jsr publish --dry-run
-// Get data from Changelog & Commits
+import { releaseChangelog, releasePublish, releaseVersion } from 'nx/release'
+import * as yargs from 'yargs'
 
-import MonoRepoConfig from "./monorepo.config"
+release()
+async function release() {
+	const options = await yargs
+		.version(false) // don't use the default meaning of version in yargs
+		.option('version', {
+			description:
+				'Explicit version specifier to use, if overriding conventional commits',
+			type: 'string',
+		})
+		.option('dryRun', {
+			alias: 'd',
+			description:
+				'Whether or not to perform a dry-run of the release process, defaults to true',
+			type: 'boolean',
+			default: true,
+		})
+		.option('verbose', {
+			description:
+				'Whether or not to enable verbose logging, defaults to false',
+			type: 'boolean',
+			default: false,
+		})
+		.parseAsync()
 
-// ON MERGE: `main`
-// TODO: Check if changelog is published
+	const { workspaceVersion, projectsVersionData } = await releaseVersion({
+		specifier: options.version,
+		dryRun: options.dryRun,
+		verbose: options.verbose,
+	})
 
+	await releaseChangelog({
+		versionData: projectsVersionData,
+		version: workspaceVersion,
+		dryRun: options.dryRun,
+		verbose: options.verbose,
+	})
 
-// ON NEW (DRAFT) PR:
-function GenerateChangelog() {
-    // npm run prepublish
+	// The returned number value from releasePublish will be zero if all projects are published successfully, non-zero if not
+	const publishStatus = await releasePublish({
+		dryRun: options.dryRun,
+		verbose: options.verbose,
+	})
 
-    MonoRepoConfig.packages.forEach((pkg) => {
-// TODO: Search for edits
-const commits = true
-if (!commits) return
-
-        const ReleaseTag = 'core/v1.0.0'
-        const ReleaseMessage = `
-        ## Core (npmjs.com/@dynamodb-sdk/core)
-        
-        ### Changelog
-        
-        - 
-        - 
-        - 
-        
-        
-        ### Commits:
-        
-        - feat(workspace): new feature added by @USERNAME (#PR)
-        - 
-        - 
-        `
-
-        // TODO: Push Release
-    })
+	process.exit(publishStatus)
 }
-
-// TODO: PREVENT MERGE IF NO CHANGELOG
-// ON MERGE: `stable`
-
-
-// * PUBLISH ONLY THOSE PACKAGES THAT HAVE CHANGES
-// install bun
-// bunx npm publish
-// bunx jsr publish
-
-// https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages
-// GITHUB_TOKEN

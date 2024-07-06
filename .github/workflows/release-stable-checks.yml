@@ -1,0 +1,36 @@
+name: PR Checks Workflow
+on:
+  pull_request: 
+    branches: [stable]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Versioning
+        # TODO: PRINT VERSION BUMPS `FROM` -> `TO`
+        run: deno doc --html
+
+      - name: Validate Changelog
+        # TODO: PRINT CHANGELOG AS IT SHALL APPEAR IN RELEASE
+        run: deno doc --html
+
+      # ---
+
+      - name: Dry Runs before publishing package
+        run: |
+          jsr publish --dry-run
+          npm publish --dry-run
+          nx release --dry-run
+
+      # ---
+
+      - name: Publish Summary
+        run: _

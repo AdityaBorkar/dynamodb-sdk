@@ -1,7 +1,7 @@
 {
-  "name": "@dynamodb-sdk/zod",
+  "name": "@dynamodb-sdk/sst",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "pkgs/zod",
+  "sourceRoot": "packages/sst",
   "projectType": "application",
   "targets": {}
 }

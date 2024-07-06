@@ -1,8 +1,7 @@
-name: Publish
+name: Development (Working Draft) PR Checks Workflow
 on:
-  push:
-    branches:
-      - main
+  pull_request: 
+    branches: [dev]
 
 jobs:
   publish:
@@ -13,35 +12,49 @@ jobs:
       id-token: write
 
     steps:
+      # Setup:
       - uses: actions/checkout@v4
 
-      - name: JS/TS Docs Checks
-        run: deno doc --html
-
-      - name: Astro Docs Checks
-        run: deno doc --html
-
-      - name: JSR Package Checks
-        run: deno doc --html
-
-      - name: Code Coverage and Tests
-        run: deno doc --html
+      # ---
 
       - name: Validate Commit Messages
-        run: deno doc --html
+        run: _
 
-      - name: Validate Versioning
-        # TODO: PRINT VERSION BUMPS `FROM` -> `TO`
-        run: deno doc --html
+      # ---
 
-      - name: Validate Changelog
-        # TODO: PRINT CHANGELOG AS IT SHALL APPEAR IN RELEASE
-        run: deno doc --html
+      # Skip if no changes / Atomic Testing
+      - name: Testing
+        run: _
+
+      # Skip if no changes
+      - name: Code Coverage
+        run: _
+
+      # Skip if no changes
+      - name: Code Speed
+        run: _
+        
+      # ---
+      
+      - name: Generate Documentation
+        run: |
+          deno doc --html
+      
+      # TODO: Only check the documentation that is "newly generated" / "changed"
+      - name: Documentaation Checks
+        run: |
+          deno doc --html
+          echo "JSR Package Checks"
+          echo "JS/TS Docs Checks"
+          echo "Astro Docs Checks"
+
+      # ---
 
       - name: Publish Summary
-        run: deno doc --html
+        run: _
 
-        #  ----
+      #  ---
+
       - name: Output candidate version number
         uses: actions/github-script@v7
         with:
@@ -56,5 +69,3 @@ jobs:
               description: package.version,
               target_url: `https://unpkg.com/${package.name}@${package.version}/`
             })
-
-          # TODO: When a major has to be merged, change the base of the git to  make sure we can track the major changes from the very start

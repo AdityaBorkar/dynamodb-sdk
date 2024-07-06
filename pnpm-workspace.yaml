@@ -1,4 +1,3 @@
-{
-  "name": "dynamodb-sdk",
-  "workspaces": ["docs","pkgs/core","pkgs/arktype","pkgs/zod","pkgs/superstruct","pkgs/sst"]
-}
+packages:
+  - 'docs'
+  - 'packages/*'

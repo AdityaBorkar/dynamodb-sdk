@@ -1,7 +1,7 @@
 {
-  "name": "@dynamodb-sdk/arktype",
+  "name": "@dynamodb-sdk/valibot",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "pkgs/arktype",
+  "sourceRoot": "packages/valibot",
   "projectType": "application",
   "targets": {}
 }

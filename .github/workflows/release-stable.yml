@@ -1,0 +1,89 @@
+name: Stable Release Workflow
+on:
+  push:
+    branches: [stable]
+
+jobs:
+  release-checks:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - import: release-stable-checks.yml
+
+  release:
+    needs:  release-checks
+    if: ${{ success() }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # Setup:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v4
+
+      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
+      # - run: npx nx-cloud record -- echo Hello World
+      - run: npx nx affected -t lint test build
+
+      # TODO: REPLACE WITH:
+      - name: Release
+        run: pnpm nx release --dry-run
+
+      # ---
+
+      - name: Increment Versions
+        run: Increment Versions inside of Packages
+
+      - name: Update Changelog in Docs
+        run: Increment Versions inside of Packages
+
+      - name: Publish Packages Release on GitHub
+        run: Increment Versions inside of Packages
+
+      - name: Deployment of Docs on GitHub
+        run: Increment Versions inside of Packages
+
+      #  https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages
+
+      - name: Publish package on NPM
+        run: bunx npm publish
+        
+      - name: Publish package on JSR
+        run: bunx jsr publish
+
+      - name: Generate Provenance
+        run: generate provenance
+
+    #     const ReleaseTag = 'core/v1.0.0'
+    #     const ReleaseMessage = `
+    #     ## Core (npmjs.com/@dynamodb-sdk/core)
+        
+    #     ### Changelog
+        
+    #     - 
+    #     - 
+    #     - 
+        
+        
+    #     ### Commits:
+        
+    #     - feat(workspace): new feature added by @USERNAME (#PR)
+    #     - 
+    #     - 
+    #     `
+
+    #     // TODO: Push Release

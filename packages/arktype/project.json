@@ -1,7 +1,7 @@
 {
-  "name": "@dynamodb-sdk/superstruct",
+  "name": "@dynamodb-sdk/arktype",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "pkgs/superstruct",
+  "sourceRoot": "packages/arktype",
   "projectType": "application",
   "targets": {}
 }

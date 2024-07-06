@@ -1,5 +1,5 @@
 # Personal Files
-.DRAFTS
+.DRAFTS/
 *.gpg
 
 # Arktype
@@ -113,7 +113,3 @@ dist/
 
 # astro generated types
 .astro/
-
-node_modules
-
-.astro
