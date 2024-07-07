@@ -1,8 +1,9 @@
 {
-  "recommendations": [
-    "biomejs.biome",
-    "nrwl.angular-console",
-    "astro-build.astro-vscode",
-    "esbenp.prettier-vscode"
-  ]
+	"recommendations": [
+		"biomejs.biome",
+		"aaron-bond.better-comments",
+		"nrwl.angular-console",
+		"astro-build.astro-vscode",
+		"bradlc.vscode-tailwindcss"
+	]
 }

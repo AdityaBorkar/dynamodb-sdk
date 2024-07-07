@@ -1,7 +1,7 @@
 name: Development (Working Draft) Workflow
 on:
   push:
-    branches: [dev]
+    branches: [] # [dev]
 
 jobs:
   pre-release:
@@ -32,6 +32,7 @@ jobs:
       - run: npx nx affected -t lint test build
 
       - name: Increment Versions
+        # increment: jsr.json and package.json
         run: Increment Versions inside of Packages
 
       - name: Update Changelog in Docs

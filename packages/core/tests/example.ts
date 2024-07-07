@@ -1,58 +1,76 @@
-import { DynamoDbClient, ZodSchemaResolver } from 'package/src/index'
+import { DynamoDbClient, ZodSchemaResolver } from '@/index'
 import { z } from 'zod'
 
 const UsersSchema = ZodSchemaResolver({
-  keys: { id: z.string() },
-  attributes: z.object({
-    slug: z.string().optional(),
-  }),
+	keys: { id: z.string() },
+	attributes: z.object({
+		slug: z.string().optional(),
+	}),
 })
 
 const ProjectsSchema = ZodSchemaResolver({
-  keys: { id: z.string() },
-  attributes: z.object({
-    name: z.string(),
-    creator: z.object({
-      id: z.string(),
-      name: z.string(),
-    }),
-    slug: z.string().optional(),
-  }),
+	keys: { id: z.string() },
+	attributes: z.object({
+		name: z.string(),
+		creator: z.object({
+			id: z.string(),
+			name: z.string(),
+		}),
+		slug: z.string().optional(),
+	}),
+	lsi: {
+		'index-name': {
+			hashKey: 'name',
+			sortKey: 'slug',
+			projection: 'ALL',
+		},
+		'index-name2': {
+			hashKey: 'slug',
+			projection: 'ALL',
+		},
+	},
 })
 
 const SyncStatusSchema = ZodSchemaResolver({
-  keys: { id: z.string() },
-  attributes: z.object({
-    slug: z.string().optional(),
-  }),
+	keys: { id: z.string() },
+	attributes: z.object({
+		slug: z.string().optional(),
+	}),
 })
 
 export const dbSchema = {
-  Users: UsersSchema,
-  Projects: ProjectsSchema,
-  SyncStatus: SyncStatusSchema,
+	Users: UsersSchema,
+	Projects: ProjectsSchema,
+	SyncStatus: SyncStatusSchema,
 } as const
 
 const db = DynamoDbClient({
-  dbSchema,
-  verbose: false,
-  validate: false,
-  maxAttempts: 2,
-  region: 'ap-south-1',
-  schemaless: false,
+	dbSchema,
+	verbose: false,
+	validate: false,
+	schemaless: false,
+	maxAttempts: 2,
+	region: 'ap-south-1',
 })
 
 // ---
 
-const test1 = db.Projects.update({
-  id: '1',
+const test2 = db.Projects.update({
+	id: '1',
 }).data({
-  name: 'Project 1',
-  slug: $ => $.createIfNotExists('Project 1'),
-  // creator: {
-  //   id: $ => $.delete(),
-  // },
+	name: 'Project 1',
+	slug: $ => $.createIfNotExists('Project 1'),
+	// creator: {
+	//   id: $ => $.delete(),
+	// },
 })
+
+const debug = ProjectsSchema._typings.indices
+
+const test1 = db.Projects.query({
+	indexName: 'index-name2',
+	ifCondition: '',
+}).cursor({ slug: 'Project 1' })
 
 // const example1 = client.Projects.put({
 //   id: '1',

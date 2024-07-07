@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ZodSchemaResolver } from 'package/src/index'
+import { ZodSchemaResolver } from '@/index'
 
 import { expect, describe, it } from 'vitest'
 
@@ -78,57 +78,57 @@ import { expect, describe, it } from 'vitest'
 // })
 
 describe('Zod Schema Typings - Single Schema:', () => {
-  const UserSchema = {
-    keys: {
-      id: z.string(),
-      timestamp: z.string(),
-    },
-    attributes: z.object({
-      name: z.string(),
-      age: z.number(),
-    }),
-  }
-  const data_truthy = {
-    id: '123',
-    timestamp: '2022-01-01',
-    name: 'John Doe',
-    age: 30,
-  }
-  const data_falsy = {
-    id: '123',
-    timestamp: '2022-01-01',
-    name: 'John Doe',
-    age: '30', // Invalid type
-  }
+	const UserSchema = {
+		keys: {
+			id: z.string(),
+			timestamp: z.string(),
+		},
+		attributes: z.object({
+			name: z.string(),
+			age: z.number(),
+		}),
+	}
+	const data_truthy = {
+		id: '123',
+		timestamp: '2022-01-01',
+		name: 'John Doe',
+		age: 30,
+	}
+	const data_falsy = {
+		id: '123',
+		timestamp: '2022-01-01',
+		name: 'John Doe',
+		age: '30', // Invalid type
+	}
 
-  const schema = ZodSchemaResolver(UserSchema)
+	const schema = ZodSchemaResolver(UserSchema)
 
-  it('creates a schema with keys, attributes and item', () => {
-    const result = schema.validate(data_truthy)
-    expect(result.success).toBe(true)
-    expect(result.data).toEqual(data_truthy)
-    expect(result_falsy.error).toBeUndefined()
-  })
+	it('creates a schema with keys, attributes and item', () => {
+		const result = schema.validate(data_truthy)
+		expect(result.success).toBe(true)
+		expect(result.data).toEqual(data_truthy)
+		expect(result_falsy.error).toBeUndefined()
+	})
 
-  it('returns validation', () => {
-    // TODO: CHECK TYPINGS
-    const result_truthy = schema.validate(data_truthy)
-    expect(result_truthy.success).toBe(true)
-    expect(result_truthy.data).toEqual(data_truthy)
-    expect(result_truthy.error).toBeUndefined()
+	it('returns validation', () => {
+		// TODO: CHECK TYPINGS
+		const result_truthy = schema.validate(data_truthy)
+		expect(result_truthy.success).toBe(true)
+		expect(result_truthy.data).toEqual(data_truthy)
+		expect(result_truthy.error).toBeUndefined()
 
-    const result_falsy = schema.validate(data_falsy)
-    expect(result_falsy.success).toBe(false)
-    expect(result_falsy.error).toBe({})
-    expect(result_falsy.data).toBeUndefined()
-  })
+		const result_falsy = schema.validate(data_falsy)
+		expect(result_falsy.success).toBe(false)
+		expect(result_falsy.error).toBe({})
+		expect(result_falsy.data).toBeUndefined()
+	})
 
-  it('returns typings', () => {
-    // TODO: CHECK TYPINGS
-    const result = schema.validate(data_truthy)
-    expect(result.success).toBe(true)
-    expect(result.data).toEqual(data_truthy)
-  })
+	it('returns typings', () => {
+		// TODO: CHECK TYPINGS
+		const result = schema.validate(data_truthy)
+		expect(result.success).toBe(true)
+		expect(result.data).toEqual(data_truthy)
+	})
 })
 
 // describe('Zod Schema Typings - Multiple Schema:', () => {
