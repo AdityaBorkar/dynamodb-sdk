@@ -65,8 +65,6 @@ const test2 = db.Projects.update({
 	// },
 })
 
-const debug = ProjectsSchema._typings.indices
-
 const test1 = db.Projects.query({
 	indexName: 'index-name2',
 	ifCondition: '',

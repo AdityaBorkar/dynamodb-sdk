@@ -3,7 +3,7 @@ import type { ZodNumber, ZodObject, ZodString, ZodUnion } from 'zod'
 
 import { z } from 'zod'
 
-// TODO: Make sure Typescript proerties are validated by JS functions
+// TODO: Make sure Typescript properties are validated by JS functions
 
 // TODO: Attribute Name Type Checking
 // You can use any attribute name in a document path as long as they meet these requirements:
@@ -44,7 +44,7 @@ type GSI<
  * @params schema.indices - Zod Object
  *
  */
-export default function createSchema_zod<
+export default function createTableSchema<
 	KT extends TwoKeyRecord<string, ZodString | ZodNumber>, // TODO: Add Binary
 	AT extends ZodObjectAny | [ZodObjectAny, ZodObjectAny, ...ZodObjectAny[]],
 	// biome-ignore lint/complexity/noBannedTypes: <explanation>
@@ -75,18 +75,18 @@ export default function createSchema_zod<
 	const validate = (data: any | any[]) => {
 		// TODO: Covert ZodError to standard error
 
-		type DataType = typeof _typings.item
+		type DataType = typeof _types.item
 		if (!Array.isArray(data)) {
 			const result = item.safeParse(data)
 			return {
-				error: result.error,
 				data: result.data as DataType,
+				error: result.error as ValidationError,
 			}
 		}
 
 		type ValidationResult = {
-			error: z.ZodError<any>[]
 			data: DataType[]
+			error: ValidationError[]
 		}
 		const result: ValidationResult = { data: [], error: [] }
 		for (const d of data) {
@@ -117,11 +117,11 @@ export default function createSchema_zod<
 		}
 	}
 
-	const _typings = {
-		item: null as unknown as ItemType,
-		keys: null as unknown as KeysType,
-		attributes: null as unknown as AttributesType,
-		indices: null as unknown as LsiKeys<LSIT> & GsiKeys<GSIT>,
+	const _types = null as unknown as {
+		item: ItemType
+		keys: KeysType
+		attributes: AttributesType
+		indices: LsiKeys<LSIT> & GsiKeys<GSIT>
 	}
 
 	return {
@@ -145,6 +145,6 @@ export default function createSchema_zod<
 		 * @private @internal
 		 * Exclusive for internal type inference and are not meant to be used directly.
 		 */
-		_typings,
-	}
+		_types,
+	} satisfies TableSchema
 }

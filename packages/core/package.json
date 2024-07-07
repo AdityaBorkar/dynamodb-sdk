@@ -14,9 +14,6 @@
     "schema",
     "database",
     "nosql",
-    "sst",
-    "zod",
-    "superstruct",
     "datastore"
   ],
   "homepage": "https://adityaborkar.com/dynamodb-sdk",
@@ -36,14 +33,15 @@
     "tests"
   ],
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.14.0"
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "node --watch --import=tsx tests/example.ts",
-    "dev1": "vitest --watch --disable-console-intercept",
-    "generate:docs": "typedoc",
-    "test": "vitest"
+    "docs": "typedoc",
+    "dev": "node --watch --import=tsx tests/dev.ts",
+    "dev:test": "vitest --watch --disable-console-intercept",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.602.0",
@@ -58,6 +56,7 @@
   "devDependencies": {
     "@arktype/attest": "^0.8.0",
     "@biomejs/biome": "^1.8.2",
+    "@vitest/coverage-v8": "^1.6.0",
     "@vitest/ui": "^1.6.0",
     "tsx": "^4.15.7",
     "typedoc": "^0.26.1",
