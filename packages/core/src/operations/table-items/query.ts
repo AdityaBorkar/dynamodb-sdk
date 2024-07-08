@@ -48,6 +48,18 @@ export default class QueryOperation<
 	}
 
 	/**
+	 * Determines the read consistency model
+	 *
+	 * @params {boolean} [read=true] -
+	 * - If `true` - the operation uses strongly consistent reads.
+	 * - If `false` - the operation uses eventually consistent reads.
+	 */
+	consistent(read?: boolean) {
+		const params = { ConsistentRead: read ?? true }
+		return this.#CLONE_INSTANCE<'consistent', typeof params>(params)
+	}
+
+	/**
 	 * Maximum number of items to evaluate (upto 1 MB). You can use the {@linkcode QueryOperation#next() | next()} method to fetch more items.
 	 */
 	limit<L extends number>(limit: L) {
@@ -59,8 +71,8 @@ export default class QueryOperation<
 	 * Start key to begin the query. Use the {@linkcode QueryOperation#next() | next()} method to fetch more items.
 	 */
 	cursor(
-		startKey: CIT['IndexName'] extends keyof TS['_typings']['indices']
-			? TS['_typings']['indices'][CIT['IndexName']]
+		startKey: CIT['IndexName'] extends keyof TS['_types']['indices']
+			? TS['_types']['indices'][CIT['IndexName']]
 			: never,
 	) {
 		const params = { ExclusiveStartKey: startKey }
@@ -98,8 +110,8 @@ export default class QueryOperation<
 	}: {
 		select?: ST
 		attributes?: [
-			ExtractSchemaAttributes<TS['_typings']['attributes']>,
-			...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
+			ExtractSchemaAttributes<TS['_types']['attributes']>,
+			...ExtractSchemaAttributes<TS['_types']['attributes']>[],
 		]
 	}) {
 		const projection = CompileProjectionExpression(
@@ -108,18 +120,6 @@ export default class QueryOperation<
 		)
 		const params = { ...projection, Select: select }
 		return this.#CLONE_INSTANCE<'metadata', typeof params>(params)
-	}
-
-	/**
-	 * Determines the read consistency model
-	 *
-	 * @params {boolean} [read=true] -
-	 * - If `true` - the operation uses strongly consistent reads.
-	 * - If `false` - the operation uses eventually consistent reads.
-	 */
-	consistent(read?: boolean) {
-		const params = { ConsistentRead: read ?? true }
-		return this.#CLONE_INSTANCE<'consistent', typeof params>(params)
 	}
 
 	/**
@@ -181,8 +181,8 @@ export default class QueryOperation<
 			data: CIT['Select'] extends 'COUNT'
 				? null
 				: ValidateValue extends true
-					? TS['_typings']['item']
-					: TS['_typings']['item'] & Record<string, any>
+					? TS['_types']['item']
+					: TS['_types']['item'] & Record<string, any>
 			metadata: {
 				request: QueryCommandOutput['$metadata']
 				lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey']

@@ -65,7 +65,7 @@ export default class UpdateOperation<
 	 * Adds one or more attributes to an item. If any of these attributes already exists, they are overwritten by the new values.
 	 */
 	data(
-		command: UpdateDataInput<TS['_typings']['attributes']>,
+		command: UpdateDataInput<TS['_types']['attributes']>,
 		options?: { merge?: boolean | { array: boolean; object: boolean } },
 	) {
 		const params = EvaluateUpdateExpression(command, this.schema.item, options)
@@ -74,8 +74,8 @@ export default class UpdateOperation<
 
 	// delete(
 	//   attributes: [
-	//     ExtractSchemaAttributes<TS['_typings']['attributes']>,
-	//     ...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
+	//     ExtractSchemaAttributes<TS['_types']['attributes']>,
+	//     ...ExtractSchemaAttributes<TS['_types']['attributes']>[],
 	//   ],
 	// ) {
 	//   // TODO: DELETE THESE ATTRIBUTES
@@ -193,8 +193,8 @@ export default class UpdateOperation<
 		} as {
 			data: CIT['ReturnValues'] extends 'ALL_OLD'
 				? ValidateValue extends true
-					? TS['_typings']['item']
-					: TS['_typings']['item'] & Record<string, any>
+					? TS['_types']['item']
+					: TS['_types']['item'] & Record<string, any>
 				: null
 			metadata: {
 				request: UpdateCommandOutput['$metadata']

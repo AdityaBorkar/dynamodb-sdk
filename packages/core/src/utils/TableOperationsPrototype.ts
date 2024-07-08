@@ -62,7 +62,7 @@ export default function TableOperationsPrototype<
 		 * @api {@link https://www.example.com/api/table-items/delete | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/DeleteItemCommand/ | AWS JS SDK (v3) API Reference}
 		 */
-		delete: (Key: TS['_typings']['keys']) => {
+		delete: (Key: TS['_types']['keys']) => {
 			const command = { TableName, Key }
 			type CIT = typeof command
 			return new DeleteOperation<TS, FT, CIT, ''>({ ...prop, command })
@@ -73,7 +73,7 @@ export default function TableOperationsPrototype<
 		 * @api {@link https://www.example.com/api/table-items/delete | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/GetItemCommand/ | AWS JS SDK (v3) API Reference}
 		 */
-		get: (Key: TS['_typings']['keys']) => {
+		get: (Key: TS['_types']['keys']) => {
 			const command = { TableName, Key }
 			type CIT = typeof command
 			return new GetOperation<TS, FT, CIT, ''>({ ...prop, command })
@@ -84,7 +84,7 @@ export default function TableOperationsPrototype<
 		 * @api {@link https://www.example.com/api/table-items/put | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/PutItemCommand/|AWS JS SDK (v3) API Reference}
 		 */
-		put: (Item: TS['_typings']['item']) => {
+		put: (Item: TS['_types']['item']) => {
 			const command = { TableName, Item }
 			type CIT = typeof command
 			return new PutOperation<TS, FT, CIT, ''>({ ...prop, command })
@@ -96,8 +96,8 @@ export default function TableOperationsPrototype<
 		 * @api {@link https://www.example.com/api/table-items/query | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/QueryCommand/ | AWS JS SDK (v3) API Reference}
 		 */
-		query: <IT extends keyof TS['_typings']['indices']>(props: {
-			indexName: IT
+		query: <IT extends keyof TS['_types']['indices']>(props: {
+			indexName?: IT
 			ifCondition: string
 		}) => {
 			// TODO: `ifCondition` should be a KEY condition expression
@@ -115,17 +115,22 @@ export default function TableOperationsPrototype<
 		 * @docs {@link https://www.example.com/docs/table-items/scan | dynamodb-sdk Documentation}
 		 * @api {@link https://www.example.com/api/table-items/scan | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/ScanCommand/ | AWS JS SDK (v3) API Reference}
+		 * 
+		 * 
+			// Count and ScannedCount only return the count of items specific to a single scan request and, unless the table is less than 1MB, do not represent the total number of items in the table.
+			// DynamoDB does not provide snapshot isolation for a scan operation when the ConsistentRead parameter is set to true. Thus, a DynamoDB scan operation does not guarantee that all reads in a scan see a consistent snapshot of the table when the scan operation was requested.
 		 */
-		scan: (props: {
-			indexName?: TS['_typings']['keys']
+		scan: <IT extends keyof TS['_types']['indices']>(props: {
+			indexName?: IT
 			ifCondition: string
 		}) => {
+			// TODO: `ifCondition` should be a KEY condition expression
 			// TODO: Do some processing of 'KeyConditionExpression'
 			const command = {
 				TableName,
 				IndexName: props.indexName,
 				KeyConditionExpression: props.ifCondition,
-			}
+			} as const
 			type CIT = typeof command
 			return new ScanOperation<TS, FT, CIT, ''>({ ...prop, command })
 		},
@@ -135,7 +140,7 @@ export default function TableOperationsPrototype<
 		 * @api {@link https://www.example.com/api/table-items/update | dynamodb-sdk API Reference}
 		 * @see {@link https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/UpdateItemCommand/ | AWS JS SDK (v3) API Reference}
 		 */
-		update: (Key: TS['_typings']['keys']) => {
+		update: (Key: TS['_types']['keys']) => {
 			const command = { TableName, Key }
 			type CIT = typeof command
 			return new UpdateOperation<TS, FT, CIT, ''>({ ...prop, command })

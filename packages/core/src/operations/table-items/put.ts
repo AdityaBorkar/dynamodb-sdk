@@ -128,8 +128,8 @@ export default class PutOperation<
 		} as {
 			data: CIT['ReturnValues'] extends 'ALL_OLD'
 				? ValidateValue extends true
-					? TS['_typings']['item']
-					: TS['_typings']['item'] & Record<string, any>
+					? TS['_types']['item']
+					: TS['_types']['item'] & Record<string, any>
 				: null
 			metadata: {
 				request: PutCommandOutput['$metadata']

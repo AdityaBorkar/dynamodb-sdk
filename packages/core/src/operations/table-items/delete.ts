@@ -135,8 +135,8 @@ export default class DeleteOperation<
 			},
 		} as {
 			data: ValidateValue extends true
-				? TS['_typings']['item']
-				: TS['_typings']['item'] & Record<string, any>
+				? TS['_types']['item']
+				: TS['_types']['item'] & Record<string, any>
 			metadata: {
 				request: DeleteCommandOutput['$metadata']
 				metrics: CIT['ReturnItemCollectionMetrics'] extends 'SIZE'

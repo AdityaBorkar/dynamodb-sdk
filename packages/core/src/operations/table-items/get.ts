@@ -35,8 +35,8 @@ export default class GetOperation<
 	 */
 	values(
 		attributes: [
-			ExtractSchemaAttributes<TS['_typings']['attributes']>,
-			...ExtractSchemaAttributes<TS['_typings']['attributes']>[],
+			ExtractSchemaAttributes<TS['_types']['attributes']>,
+			...ExtractSchemaAttributes<TS['_types']['attributes']>[],
 		],
 	) {
 		const params = CompileProjectionExpression(
@@ -111,8 +111,8 @@ export default class GetOperation<
 			},
 		} as {
 			data: ValidateValue extends true
-				? TS['_typings']['item']
-				: TS['_typings']['item'] & Record<string, any>
+				? TS['_types']['item']
+				: TS['_types']['item'] & Record<string, any>
 			metadata: {
 				request: GetCommandOutput['$metadata']
 				consumedCapacity: CIT['ReturnConsumedCapacity'] extends
