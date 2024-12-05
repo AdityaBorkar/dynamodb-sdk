@@ -1,0 +1,65 @@
+---
+import { twMerge } from "tailwind-merge";
+
+interface Props {
+    activeTab: number;
+}
+
+const { activeTab } = Astro.props;
+---
+
+<header class="*:px-16 sticky top-0 z-50 backdrop-blur-2xl">
+    <div
+        class="relative flex flex-row justify-between w-full pt-4 pb-3 border-b border-neutral-800"
+    >
+        <div class="pl-4 text-3xl font-bold text-white">dynamodb-sdk</div>
+        <div class="flex pt-2 flex-row gap-8 text-neutral-400">
+            <a href="https://npmjs.com/package/dynamodb-sdk" target="_blank"
+                >npm</a
+            >
+            <a href="https://" target="_blank">discord</a>
+            <a href="https://" target="_blank">github</a>
+            <div>dark</div>
+        </div>
+
+        <!-- <nav class="mt-4 flex flex-row gap-2 font-medium text-neutral-400">
+            <a
+                href="/guides"
+                class={`px-4 ${activeTab === 1 ? "border-b-2 border-blue-600 text-neutral-200" : ""}`}
+            >
+                Guides
+            </a>
+            <a
+                href="/docs"
+                class={`px-4 ${activeTab === 0 ? "border-b-2 border-blue-600 text-neutral-200" : ""}`}
+            >
+                Documentation
+            </a>
+            <a
+                href="/changelog"
+                class={`px-4 ${activeTab === 0 ? "border-b-2 border-blue-600 text-neutral-200" : ""}`}
+            >
+                Changelog
+            </a>
+            <a
+                href="/ref"
+                class={`px-4 ${activeTab === 2 ? "border-b-2 border-blue-600 text-neutral-200" : ""}`}
+                >API Reference
+            </a>
+            <a href="/playground" class="py-2 px-4">Playground /</a>
+        </nav> -->
+
+        <div
+            class={twMerge(
+                "absolute top-4 left-[calc(50%-10rem)] w-[20rem]",
+                "py-1.5 border cursor-pointer hover:border-neutral-500 border-neutral-700 text-neutral-400 bg-neutral-900 px-5 rounded-md",
+            )}
+        >
+            Search or Ask AI...
+            <span
+                class="absolute top-1.5 right-2 font-bold tracking-tighter text-neutral-500"
+                >CTRL + K</span
+            >
+        </div>
+    </div>
+</header>

@@ -1,0 +1,37 @@
+---
+import RootLayout from '../../layouts/RootLayout.astro'
+---
+
+<!-- TODO: MERGE THE HEADERS for an uniform look -->
+<RootLayout title="Playground">
+	<header class="*:px-16 sticky top-0 backdrop-blur-2xl">
+		<div
+			class="flex flex-row justify-between w-full py-4 border-b border-neutral-800"
+		>
+			<div class="pl-4 text-3xl font-bold text-white">dynamodb-sdk</div>
+			<div class="flex pt-2.5 flex-row gap-4 text-neutral-400">
+				<div>(npm)</div>
+				<div>(discord)</div>
+				<div>(github)</div>
+				<div>(dark)</div>
+			</div>
+		</div>
+	</header>
+
+	<h1 class="mt-12 mb-8 font-semibold text-3xl px-20">Playground</h1>
+	<!-- Tour -->
+	<!-- Documentation -->
+
+	<div class="px-20">
+		<div>Project: Save, List, Download</div>
+
+		<div>Schema: Construct, Save, Download</div>
+		<div>Strategies: Read, Implement</div>
+		<div>Operations: Build, Test, Run</div>
+
+		<div>Spin a Local Instance on WASM</div>
+	</div>
+</RootLayout>
+
+<!-- Offline Support -->
+<!-- Use Shared Web Workers -->

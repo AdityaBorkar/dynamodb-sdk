@@ -1,0 +1,291 @@
+[
+    {
+        "title": "Getting Started",
+        "contains": [
+            {
+                "name": "About",
+                "slug": "about"
+            },
+            {
+                "name": "Installation",
+                "slug": "install"
+            },
+            {
+                "name": "Configuration",
+                "slug": "config"
+            },
+            {
+                "name": "Schema",
+                "slug": "schema"
+            }
+        ]
+    },
+    {
+        "title": "Table Items",
+        "contains": [
+            {
+                "name": "Put Item",
+                "slug": "items/put"
+            },
+            {
+                "name": "Update Item",
+                "slug": "items/update"
+            },
+            {
+                "name": "Delete Item",
+                "slug": "items/delete"
+            },
+            {
+                "name": "Get Item",
+                "slug": "items/get"
+            },
+            {
+                "name": "Query Items",
+                "slug": "items/query"
+            },
+            {
+                "name": "Scan Items",
+                "slug": "items/scan"
+            },
+            {
+                "name": "Batch Get Items",
+                "slug": "items/batch-get"
+            },
+            {
+                "name": "Batch Put Items",
+                "slug": "items/batch-put"
+            },
+            {
+                "name": "Transaction - Get",
+                "slug": "items/txn-get"
+            },
+            {
+                "name": "Transaction - Put",
+                "slug": "items/txn-put"
+            }
+        ]
+    },
+    {
+        "title": "Expressions",
+        "contains": [
+            {
+                "name": "Conditional Expressions",
+                "slug": "expressions/conditional"
+            },
+            {
+                "name": "Projection Expressions",
+                "slug": "expressions/projection"
+            },
+            {
+                "name": "Filter Expressions",
+                "slug": "expressions/filter"
+            }
+        ]
+    },
+    {
+        "title": "Tables",
+        "contains": [
+            {
+                "name": "Create Table",
+                "slug": "table/create"
+            },
+            {
+                "name": "Update Table",
+                "slug": "table/update"
+            },
+            {
+                "name": "Describe Table",
+                "slug": "table/describe"
+            },
+            {
+                "name": "Delete Table",
+                "slug": "table/delete"
+            },
+            {
+                "name": "List Tables",
+                "slug": "table/list"
+            }
+        ]
+    },
+    {
+        "title": "Global Tables",
+        "contains": [
+            {
+                "name": "Create Global Table",
+                "slug": "global-table/create"
+            },
+            {
+                "name": "List Global Tables",
+                "slug": "global-table/list"
+            },
+            {
+                "name": "Update Global Table",
+                "slug": "global-table/update"
+            },
+            {
+                "name": "Describe Global Table",
+                "slug": "global-table/describe"
+            },
+            {
+                "name": "Update Global Tables Setting",
+                "slug": "global-table/update-settings"
+            },
+            {
+                "name": "Describe Global Tables Setting",
+                "slug": "global-table/describe-settings"
+            }
+        ]
+    },
+    {
+        "title": "Kinesis Streaming Destination",
+        "contains": [
+            {
+                "name": "Update",
+                "slug": "kinesis/update"
+            },
+            {
+                "name": "Enable",
+                "slug": "kinesis/enable"
+            },
+            {
+                "name": "Disable",
+                "slug": "kinesis/disable"
+            },
+            {
+                "name": "Describe",
+                "slug": "kinesis/describe"
+            }
+        ]
+    },
+    {
+        "title": "Backups",
+        "contains": [
+            {
+                "name": "List Backups",
+                "slug": "backup/list"
+            },
+            {
+                "name": "Create Backup",
+                "slug": "backup/create"
+            },
+            {
+                "name": "Delete Backup",
+                "slug": "backup/delete"
+            },
+            {
+                "name": "Describe Backup",
+                "slug": "backup/describe"
+            },
+            {
+                "name": "Restore Table From Backup",
+                "slug": "backup/restore-table"
+            },
+            {
+                "name": "Restore Table To Point In Time",
+                "slug": "backup/restore-pit"
+            },
+            {
+                "name": "Describe Continuous Backups",
+                "slug": "backup/continuous-describe"
+            },
+            {
+                "name": "Update Continuous Backups",
+                "slug": "backup/continuous-update"
+            }
+        ]
+    },
+    {
+        "title": "Import / Export",
+        "contains": [
+            {
+                "name": "Import Table",
+                "slug": "import/table"
+            },
+            {
+                "name": "Export Table To Point In Time",
+                "slug": "export/table"
+            },
+            {
+                "name": "List Imports",
+                "slug": "import/list"
+            },
+            {
+                "name": "Describe Import",
+                "slug": "import/describe"
+            },
+            {
+                "name": "List Exports",
+                "slug": "export/list"
+            },
+            {
+                "name": "Describe Export",
+                "slug": "export/describe"
+            }
+        ]
+    },
+    {
+        "title": "Others",
+        "contains": [
+            {
+                "name": "DescribeLimits",
+                "slug": ""
+            },
+            {
+                "name": "DescribeEndpoints",
+                "slug": ""
+            },
+            {
+                "name": "DescribeTimeToLive",
+                "slug": ""
+            },
+            {
+                "name": "UpdateTimeToLive",
+                "slug": ""
+            },
+            {
+                "name": "UpdateTableReplicaAutoScaling",
+                "slug": ""
+            },
+            {
+                "name": "DescribeTableReplicaAutoScaling",
+                "slug": ""
+            },
+            {
+                "name": "PutResourcePolicy",
+                "slug": ""
+            },
+            {
+                "name": "GetResourcePolicy",
+                "slug": ""
+            },
+            {
+                "name": "DeleteResourcePolicy",
+                "slug": ""
+            },
+            {
+                "name": "ListContributorInsights",
+                "slug": ""
+            },
+            {
+                "name": "UpdateContributorInsights",
+                "slug": ""
+            },
+            {
+                "name": "DescribeContributorInsights",
+                "slug": ""
+            },
+            {
+                "name": "ListTagsOfResource",
+                "slug": ""
+            },
+            {
+                "name": "TagResource",
+                "slug": ""
+            },
+            {
+                "name": "UntagResource",
+                "slug": ""
+            }
+        ]
+    }
+]

@@ -1,0 +1,101 @@
+---
+import RootLayout from "./RootLayout.astro";
+import Header from "../components/Header.astro";
+
+type NestedStringArray = (string | NestedStringArray)[];
+interface Props {
+	title: string;
+	section: string;
+	activeTab: 0 | 1 | 2;
+	onThisPage: NestedStringArray;
+	navTree: {
+		title: string;
+		contains: {
+			name: string;
+			slug: string;
+		}[];
+	}[];
+}
+
+const { title, activeTab, navTree, section, onThisPage } = Astro.props;
+---
+
+<RootLayout title={title}>
+	<!-- <div class="h-screen"> -->
+	<Header activeTab={activeTab} />
+
+	<!-- Navigation -->
+	<nav
+		id="DocsNavigation"
+		class="pt-4 fixed pl-16 top-16 pr-8 pb-8 max-h-[calc(100vh-4rem)] w-[20rem] overflow-auto text-neutral-400"
+	>
+		{
+			navTree.map(({ title, contains }) => {
+				// TODO: DISABLE PRE-FETCHING
+				return (
+					<>
+						<div class="mt-4 mb-2 px-4 text-blue-500 font-medium">
+							{title}
+						</div>
+						{contains.map(({ name, slug }) => {
+							return (
+								<a
+									class="block py-1.5 px-4 hover:text-neutral-100 hover:bg-neutral-800 rounded-md"
+									href={`/docs/${slug}`}
+									data-astro-prefetch="tap"
+								>
+									{name}
+								</a>
+							);
+						})}
+					</>
+				);
+			})
+		}
+	</nav>
+
+	<div class="relative left-[20rem] w-[calc(100%-20rem)] flex flex-row">
+		<!-- Content -->
+		<div class="border-x border-neutral-800">
+			<main class="px-16 pt-8 pb-16 text-neutral-300">
+				<a href="" class="font-medium text-blue-500">{section}</a>
+				<h1 class="text-2xl font-semibold my-6 text-neutral-100">
+					{title}
+				</h1>
+				<slot />
+			</main>
+			<footer
+				class="px-16 py-4 flex flex-row justify-between text-neutral-500 border-t border-neutral-800"
+			>
+				<div>Released under the MIT License (2024 - present)</div>
+				<div>
+					Built with &#10084;&#65039; by Aditya Borkar & Contributors
+				</div>
+			</footer>
+		</div>
+		<!-- On This Page -->
+		<div class="">
+			<aside class="fixed w-80 top-16 *:px-8">
+				<div class="mt-10 mb-6 text-neutral-500 font-medium">
+					On This Page:
+				</div>
+
+				<!--  -->
+				<a href="#hello" data-astro-prefetch="tap">Heading</a>
+				<!--  -->
+
+				<div
+					class="mt-16 pt-4 border-t text-neutral-400 border-neutral-800"
+				>
+					<a class="py-1">Edit this page on GitHub</a>
+					<div
+						class="mt-1 py-1 cursor-pointer"
+						onclick={"window.scrollTo({ top: 0, behavior: 'smooth' });"}
+					>
+						Scroll To Top
+					</div>
+				</div>
+			</aside>
+		</div>
+	</div>
+</RootLayout>
