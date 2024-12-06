@@ -1,7 +1,3 @@
-# Personal Files
-.DRAFTS/
-*.gpg
-
 # Arktype
 .attest
 
